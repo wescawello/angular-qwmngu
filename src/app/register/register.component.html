@@ -1,40 +1,110 @@
-<h1 class="header">Create an account with Firebase or Social Providers</h1>
-<div class="container">
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3">
-      <form [formGroup]="registerForm">
-        <div class="form-group">
-          <label>Email address</label>
-          <input type="email" formControlName="email" class="form-control">
+<div class="modal-header" ngxModalDraggable>
+  <h4 class="modal-title pull-left">{{title}}</h4>
+ 
+
+
+  <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+
+<div class="modal-body">
+  <div class="col-md-12 mx-auto">
+    <div class="card mx-4">
+      <div class="card-body p-4">
+        <form>
+          <p class="text-muted">{{title}} your account</p>
+          <!--<div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text"><i class="icon-user"></i></span>
+    </div>
+    <input autocomplete="username" class="form-control" placeholder="Username" required="" type="text">
+  </div>-->
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <fa-icon [icon]="['fas', 'envelope-open-text']" size="xs"></fa-icon>
+
+              </span>
+            </div>
+            <input #email autocomplete="email" class="form-control" placeholder="Email" required="" type="text">
+          </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+
+                <fa-icon [icon]="['fas', 'eye']" size="xs" (mousedown)="tarx('d',pwd)" (mouseup)="tarx('u',pwd)"></fa-icon>
+
+
+
+              </span>
+            </div>
+            <input #pwd autocomplete="new-password" class="form-control" placeholder="Password" required="" type="password">
+          </div>
+          <div class="input-group mb-4" [style.display]="cklogin.checked ? 'flex':'none'">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <fa-icon [icon]="['fas', 'eye']" size="xs" (mousedown)="tarx('d',xpwd)" (mouseup)="tarx('u',xpwd)"></fa-icon>
+              </span>
+            </div>
+            <input #xpwd autocomplete="new-password" class="form-control" placeholder="Repeat password" required="" type="password">
+          </div>
+
+          <div class="input-group mb-4">
+            <div class="input-group-prepend">
+
+            </div>
+            <input #cklogin type="checkbox" (change)="title= (cklogin.checked) ? 'Register' : 'Login'"><span>
+  Create Account {{pwd.value}}
+</span>
+          </div>
+          <div *ngIf="cklogin.checked ;else elseTmpl">
+            <button class="btn btn-block btn-info" type="button"
+                    [disabled]="!email.value || !pwd.value || !xpwd.value || (pwd.value!=xpwd.value) "
+                    (click)="tryRegister({email:email.value,password:pwd.value})">
+              Create
+            </button>
+          </div>
+
+          <ng-template #elseTmpl>
+            <div>
+
+              <button class="btn btn-block btn-success" type="button"
+                      [disabled]="!email.value || !pwd.value "
+                      (click)="login('',{email:email.value,password:pwd.value})">
+                Login
+              </button>
+            </div>
+          </ng-template>
+
+
+
+
+
+
+
+        </form>
+      </div>
+      <!--<div class="card-footer p-4">
+        <div class="row">
+          <div class="col-6">
+            <button class="loginBtn loginBtn--facebook" type="button"><span>facebook</span></button>
+          </div>
+          <div class="col-6">
+
+            <button class="loginBtn loginBtn--google" type="button"
+                    (click)="login('google')">
+              <i class="fa fa-google-plus"></i><span>Google+</span>
+            </button>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" class="form-control" formControlName="password">
-          <label class="error">{{errorMessage}}</label>
-          <label class="success">{{successMessage}}</label>
-        </div>
-        <button type="submit" (click)="tryRegister(registerForm.value)" class="btn btn-default">Register</button>
-      </form>
+      </div>-->
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-4 col-md-offset-4">
-      <button type="button" class="btn btn-primary btn-block" (click)="tryFacebookLogin()">Register with Facebook</button>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-4 col-md-offset-4">
-      <button type="button" class="btn btn-danger btn-block" (click)="tryGoogleLogin()">Register with Google</button>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-4 col-md-offset-4">
-      <button type="button" class="btn btn-info btn-block" (click)="tryTwitterLogin()">Register with Twitter</button>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-4 col-md-offset-4">
-      <p>Already have an account? <a href="/login">Login</a></p>
-    </div>
-  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="bsModalRef.hide()">取消</button>
+ 
+  <!--<button type="button" class="btn btn-primary" (click)="bsModalRef.hide()">確認</button>-->
 </div>

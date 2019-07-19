@@ -1,0 +1,100 @@
+<div class="card" style="width: 18rem;">
+   
+
+  <accordion>
+
+    <accordion-group heading="改名稱">
+      <!--<form #DForm='ngForm' name="editform"  class="form-horizontal">-->
+
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+
+              <i class="fas fa-user-edit"></i>
+
+
+
+
+            </span>
+          </div>
+          <input  #displayName="ngModel" [(ngModel)]="x.displayName" class="form-control" placeholder="DisplayName">
+
+        </div>
+        <div class="input-group mb-3">
+          <button class="btn btn-block btn-info" type="button"
+                  [disabled]="!displayName.value"
+                  (click)="chdisplayName( displayName.value)">
+            確認
+          </button>
+        </div>
+      <!--</form>-->
+    </accordion-group>
+    <accordion-group heading="改密碼">
+
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+
+            <fa-icon [icon]="['fas', 'eye']" size="xs" (mousedown)="tarx('d',pwd)" (mouseup)="tarx('u',pwd)"></fa-icon>
+
+
+
+          </span>
+        </div>
+        <input       #pwd="ngModel" [(ngModel)]="x.pwd"                         autocomplete="new-password" class="form-control" placeholder="Password" required="" type="password">
+
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+
+            <fa-icon [icon]="['fas', 'eye']" size="xs" (mousedown)="tarx('d',pwd)" (mouseup)="tarx('u',xpwd)"></fa-icon>
+
+
+
+          </span>
+        </div>
+        <input #xpwd="ngModel" [(ngModel)]="x.xpwd" autocomplete="new-password" class="form-control" placeholder="Confirm Password" required="" type="password">
+
+      </div>
+      <div class="input-group mb-3">
+        <button class="btn btn-block btn-info" type="button"
+                [disabled]="!pwd.value || !xpwd.value || (pwd.value!=xpwd.value) "
+                (click)="chpwd( pwd.value)">
+          確認
+        </button>
+      </div>
+    </accordion-group>
+
+
+    <accordion-group heading="改圖像">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+
+            <i class="fas fa-user-edit"></i>
+
+
+
+
+          </span>
+        </div>
+        <input #photoURL="ngModel" [(ngModel)]="x.photoURL" class="form-control" placeholder="PhotoURL"
+               (change)="chphoto($event)"
+               type="file" accept="image/gif, image/jpeg, image/png">
+
+      </div>
+      <div class="input-group mb-3">
+        <button class="btn btn-block btn-info" type="button"
+                [disabled]="!(photoURL$|async)"
+                (click)="chphotox()">
+          確認
+        </button>
+      </div>
+
+    </accordion-group>
+    <accordion-group heading="Another group">
+      <p>Some content</p>
+    </accordion-group>
+  </accordion>
+</div>

@@ -1,0 +1,253 @@
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      新增調撥單
+
+
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-12">
+          <form #DForm='ngForm' name="editform" (ngSubmit)="SubmitDetail(DForm)" class="form-horizontal">
+            <div class="form-group row">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                  </div>
+                  <input class="form-control" placeholder="調撥來源端" (focus)="optarget='FromDepot';picker='';largeModal.show()"
+                         #FromDepot="ngModel" required [(ngModel)]='refobj.FromDepot' name="FromDepot" autocomplete="off">
+                  <span class="help-bpx" *ngIf="FromDepot.touched && !FromDepot.valid ">*</span>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                  </div>
+                  <input class="form-control" placeholder="調撥目的端" (focus)="optarget='ToDepot';picker='';largeModal.show()"
+                         #ToDepot="ngModel" required [(ngModel)]='refobj.ToDepot' name="ToDepot" autocomplete="off">
+                  <span class="help-bpx" *ngIf="ToDepot.touched && !ToDepot.valid ">*</span>
+                </div>
+              </div>
+            </div>
+
+
+
+            <div class="form-group row">
+              <div class="col-md-12">
+                <div class="input-group"  *ngIf="refobj.FromDepot && refobj.ToDepot  && refobj.FromDepot != refobj.ToDepot"   >
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                  </div>
+                  <input class="form-control" placeholder="請輸入項目名稱" (change)="dynamic=0"
+                         (focus)="FruitModal.show()"
+                         
+                         #AssetName="ngModel" required [(ngModel)]='refobj.AssetName' name="AssetName">
+                  <span class="help-bpx" *ngIf="AssetName.touched && !AssetName.valid ">*</span>
+                </div>
+              </div>
+            
+            </div>
+              <!--<div class="form-group row">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <span class="input-group-text"><i class="fa fa-user"></i></span>
+      </div>
+      <input class="form-control" placeholder="輸入數量" type="number"
+             #Amount="ngModel" required [(ngModel)]='refobj.Amount' name="Amount">
+      <span class="help-bpx" *ngIf="Amount.touched && !Amount.valid ">*</span>
+    </div>
+  </div>-->
+              <!--<div class="form-group row" *ngIf="refobj.AssetName  && ObDo$|async as dy">
+    <mv-slider [(value)]="dy.To" [min]="0" [max]="dy.Max" [enabled]="true" (change)="FTchange(dy)"></mv-slider>
+    {{dy|json}}
+
+    {{Dx|json}}
+  </div>-->
+              
+            <div *ngFor="let f of Fruits$$|async;let k=index" class="row">
+              <div class="card" style="min-height:60px;width:100%; ">
+                <div class="card-body">
+                  <h5 class="card-title">{{f.name}}</h5>
+                  <input type="range" [max]="f.range.Max" [(ngModel)]='f.range.fixTo' name="ranges[{{k}}]" (ngModelChange)="fixrange(f)" style="width:100%" />
+
+                  <p class="card-text">
+                    <label style=" ">{{f.range.To}}<span *ngIf="f.randerobj?.Amt">=>{{f.range.fixTo}}         </span></label>
+                    <label style="float:right ">{{f.range.Max-  f.range.To   }}<span *ngIf="f.randerobj?.Amt">=>{{f.range.Max-f.range.fixTo}}</span></label>
+                    <br />
+                    <span class="text-center" style=" font-size:small">
+                      {{f.randerstr }}
+                    </span>
+                  </p>
+                </div>
+                   
+                 
+
+
+                 
+                  
+                </div>
+
+              </div>
+
+
+
+            <div class="form-group row">
+              <div class="col-md-12">
+
+                <button class="btn btn-pill btn-warning" type="button" (click)="DForm.resetForm();Fruits$$.next([]);allAmt=0" >
+                  <i class="cui-cart icons font-2xl btn-danger mt-4"></i>
+
+                  清除
+                </button>
+                <button class="btn btn-pill btn-danger" type="button" (click)="SubmitDetail(DForm);" [disabled]="!allAmt "style="float:right">
+                  <i class="cui-cart icons font-2xl btn-danger mt-4"></i>
+
+                  新增
+                </button>
+              </div>
+               
+
+
+
+
+              </div>
+
+
+
+
+</form>
+        </div>
+        
+
+
+
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="mb-2">
+            <progressbar [animate]="false" [value]="dynamic" type="success"><b>{{dynamic}}%</b></progressbar>
+            <!--  <small><em>Object (changes type based on value)</em></small>-->
+          </div>
+          <table class="table" *ngIf="transList.length>0">
+            <tr>
+              <th>單位名稱(起) </th>
+              <th>單位名稱(迄)</th>
+              <th>項目名稱</th>
+              <th>數量</th>
+              <th scope="col" style="align-content: center">Action</th>
+            </tr>
+
+
+            <tr *ngFor="let item of transList; let i = index">
+              <td>{{item.FromDepot}}</td>
+              <td>{{item.ToDepot}}</td>
+              <td>{{item.AssetName}}</td>
+              <td>{{item.Amount}}</td>
+              <td scope="col">
+                <a (click)="deleteconfirmation(item,i)" class="btn btn-danger btn-lg">
+                  <span class="fas fa-trash-alt"></span>
+                </a>
+              </td>
+            </tr>
+          </table>
+
+
+          <div class="mb-2" *ngIf="transList.length>0">
+
+            <button class="btn btn-pill btn-primary" type="button">
+              <i class="cui-basket-loaded icons font-2xl   mt-4"></i>
+
+              確認出單
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ngxModalDraggable>
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header" ngxModalDraggable>
+          <h4 class="modal-title">選擇部門單位  </h4>
+          <button type="button" class="close" (click)="largeModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="faketree">
+            <!--聯動下拉爸 OR 樹狀圖<br />-->
+            <button type="button" class="btn btn-success" (click)="picker='總經理室'">總經理室</button>
+
+            <p>
+            </p>
+
+
+
+            <button type="button" class="btn btn-success" (click)="picker='02006 系統一部'">
+              02006
+              <br />
+              系統一部
+            </button>
+            <button type="button" class="btn btn-success" (click)="picker='02007 系統二部'">02007 <br />系統二部</button>
+            <button type="button" class="btn btn-success" (click)="picker='03007 服務部'">03007 <br />服務部</button>
+            <p>
+            </p>
+            <button type="button" class="btn btn-success" (click)="picker='01005 管理部'">01005 <br />管理部</button>
+            <button type="button" class="btn btn-success" (click)="picker='05001 事業推進部'">05001 <br />事業推進部</button>
+            <p>
+
+              {{picker}}
+            </p>
+          </div>
+
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="largeModal.hide()">Close</button>
+          <button type="button" class="btn btn-primary" (click)="largeModal.hide();refobj[optarget]=picker">Save changes</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div>
+
+  <div bsModal #FruitModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" ngxModalDraggable>
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header" ngxModalDraggable>
+          <h4 class="modal-title">選擇 調整物資</h4>
+          <button type="button" class="close" (click)="FruitModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!--<div class="faketree">
+            聯動下拉爸 OR 樹狀圖<br />
+
+          </div>-->
+
+          <ul   id="xxxk">
+            <li *ngFor="let f of Fruits" class="form-check" >
+
+              <input class="form-check-input" type="checkbox" [(ngModel)]='f.selected' [name]="f.name" [id]="f.name" />
+              <label class="form-check-label" [for]="f.name">{{f.name}}</label>
+
+            </li>
+          </ul>
+
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="FruitModal.hide()">取消</button>
+          <button type="button" class="btn btn-primary" (click)="FruitModal.hide();OBFruit()">確認</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div>
+
+</div>
+

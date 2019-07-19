@@ -1,0 +1,26 @@
+<accordion [isAnimated]="true">
+  <accordion-group *ngFor="let docker of (mg.Messages$ |async ),let i = index" (isOpenChange)="readmsg(docker,$event)" [isOpen]="docker.isOpen">
+
+    <button  class="btn" [ngClass]="{
+            'btn-success':docker.Read,
+            'btn-danger':!docker.Read
+            }"   accordion-heading>
+      <i class='fa fa-users'></i> {{docker.SubTitle}} by [ {{ docker.SenderName|async}}] at [{{ docker.CreateDate |date:'yyyy-MM-dd HH:mm:ss'}}]
+    </button>
+    <span [innerHTML]="docker.Content" *ngIf="!docker.Jaction"></span>
+    <span *ngIf="docker.Jaction">
+      <a class="nav-link text-dark" [routerLink]='[docker.Jaction,docker.Jid]'>
+        <span class="badge badge-success">
+          {{docker.Jid}}
+        </span>
+      </a>
+
+    </span>
+    <button class="btn btn-danger" (click)="docker.del()" >刪除</button> 
+    <!--<pre>{{docker|json}}</pre>
+
+
+
+  <span *ngIf="docker">{{i}} {{docker|json}} </span>-->
+  </accordion-group>
+</accordion>

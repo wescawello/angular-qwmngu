@@ -1,0 +1,71 @@
+<div class="body-content">
+  <div class="card">
+    <div class="card-header">
+      <button class="btn btn-pill btn-danger" type="button" (click)="openModal('Add',null)">
+        <i class="cui-cart icons font-2xl btn-danger mt-4"></i>
+        新增報廢單
+
+      </button>
+    </div>
+    <div class="card-body">
+      <div *ngIf="(ob.data$|async).length==0">
+        <h4> No Discard Order Data is present Click Add new to add Discard Order.</h4>
+      </div>
+      <table class="table" *ngIf="(ob.data$|async).length>0">
+        <thead>
+          <tr>
+            <th scope="col">DiscardList</th>
+            <th scope="col">報廢單號 <!--DiscardSn--></th>
+            <th scope="col">單位代號<!--DepotSn--></th>
+            <th scope="col">單位名稱<!--DepotName--></th>
+            <th scope="col">報廢原因<!--DiscardType--></th>
+            <!--<th scope="col">Remark</th>-->
+            <th scope="col">建立時間 </th>
+            <th scope="col"> 修改時間</th>
+            <th scope="col" style="align-content: center"><!--Action--></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let e of (ob.data$|async) let i = index ">
+            <td scope="col">{{e.DiscardList ? e.DiscardList.length : 0}}</td>
+            <td scope="col">{{e.DiscardSn}}</td>
+            <td scope="col">{{e.DepotSn}}</td>
+            <td scope="col">{{e.DepotName}}</td>
+            <td scope="col">{{e.DiscardType}}</td>
+            <td scope="col">{{e.Remark}}</td>
+            <td scope="col">{{e.CreateDate|date:'yy/M/d h:mm a'}}</td>
+            <td scope="col">{{e.UpdateDate|date:'yy/M/d h:mm a'}}</td>
+            <td scope="col">
+ 
+              <a class="btn btn-info btn-lg" (click)="openModal('Edit',e );">
+                <span class="fas fa-pen "></span>
+              </a>
+              <a class="btn btn-danger btn-lg" (click)="deleteconfirmation(e)">
+                <span class="fas fa-trash-alt"></span>
+              </a>
+
+              <!--|
+  <button type="button" class="btn btn-default btn-danger" (click)="openModal('Test',e );">
+    <span class="glyphicon glyphicon-trash"></span> Test
+  </button>-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ul class="pagination" *ngIf="(ob.data$|async).length>0">
+        <li class="page-item"><a class="page-link" href="#">Prev</a></li>
+        <li class="page-item active">
+          <a class="page-link" href="#">1</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item"><a class="page-link" href="#">4</a></li>
+        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!--{{
+  ob.data$|async|json
+  }}-->
+</div>

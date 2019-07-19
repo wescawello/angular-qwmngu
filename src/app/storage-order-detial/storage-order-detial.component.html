@@ -1,0 +1,306 @@
+
+<div class="modal-header" ngxModalDraggable>
+  <h4 class="modal-title pull-left">{{actionName=='Add' ? '新增' : '修改'}} 請購單<!--StorageOrder--></h4>
+ 
+  <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body" *ngIf="ob.refobj$ | async as refobj">
+  <form #DForm='ngForm' name="editform" (ngSubmit)="SubmitDetail(DForm)" class="form-horizontal">
+    <div class="form-group row">
+      <div class="col-md-6">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-user"></i></span>
+          </div>
+          <input class="form-control" placeholder="請輸入請購單號"
+                 #StorageSn="ngModel" required [(ngModel)]='refobj.StorageSn' name="StorageSn">
+          <span class="help-bpx" *ngIf="StorageSn.touched && !StorageSn.valid ">*</span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-user"></i></span>
+          </div>
+          <input class="form-control" placeholder="請輸入單位代號"
+                 #DepotSn="ngModel" required [(ngModel)]='refobj.DepotSn' name="DepotSn">
+          <span class="help-bpx" *ngIf="DepotSn.touched && !DepotSn.valid ">*</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-6">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-user"></i></span>
+          </div>
+          <input class="form-control" placeholder="請輸入單位名稱"
+                 #DepotName="ngModel" required [(ngModel)]='refobj.DepotName' name="DepotName">
+          <span class="help-bpx" *ngIf="DepotName.touched && !DepotName.valid ">*</span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-user"></i></span>
+          </div>
+          <input class="form-control" placeholder="請輸入購買時間"  
+                  #BuyDate="bsDatepicker" required   name="BuyDate"  bsDatepicker
+                 [(bsValue)]="refobj.BuyDate"
+                  value="{{ refobj.BuyDate | date:'yyyy-MM-dd' }}"
+                 [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }">
+
+
+                
+          <span class="help-bpx" *ngIf="BuyDate.touched && !BuyDate.valid ">*</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-6">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-user"></i></span>
+          </div>
+          <input class="form-control" placeholder="請輸入購買人員"
+                 #CreateUser="ngModel" required [(ngModel)]='refobj.CreateUser' name="CreateUser">
+          <span class="help-bpx" *ngIf="CreateUser.touched && !CreateUser.valid ">*</span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-user"></i></span>
+          </div>
+          <input class="form-control" placeholder="請輸入類型"
+                 #StorageType="ngModel" required [(ngModel)]='refobj.StorageType' name="StorageType">
+          <span class="help-bpx" *ngIf="StorageType.touched && !StorageType.valid ">*</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-12">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-user"></i></span>
+          </div>
+          <input class="form-control" placeholder="請輸入備註"
+                 #Remark="ngModel" required [(ngModel)]='refobj.Remark' name="Remark">
+          <span class="help-bpx" *ngIf="Remark.touched && !Remark.valid ">*</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!--{{refobj|json}}-->
+
+
+    <div class="card">
+      <div class="card-header">
+        <button class="btn btn-pill btn-primary" type="button" (click)="openModal('Add',{} );listactionName='Add';" [disabled]="!refobj.StorageSn">
+          <i class="cui-cart icons font-2xl btn-danger mt-4"></i>
+          新增明細 {{ refobj.StorageSn ? '':' (請先輸入請購單號)'}}
+
+        </button>
+      </div>
+      <div class="card-body">
+        <div *ngIf="!refobj.StorageList?.length>0">
+          <h4>請點選「新增明細」，建立資產明細  .</h4>
+
+
+
+        </div>
+        <table class="table" *ngIf="refobj.StorageList?.length>0">
+          <thead>
+            <tr>
+              <th scope="col">入庫(請購)單</th>
+              <!--<th scope="col">據點編號</th>-->
+              <th scope="col">資產編號</th>
+              <th scope="col">資產名稱</th>
+              <th scope="col">廠商</th>
+              <th scope="col">數量</th>
+              <th scope="col">單價</th>
+              <!--<th scope="col">備註</th>-->
+              <th scope="col">控管類別</th>
+              <th scope="col" style="align-content: center"><!--Action--></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let e of refobj.StorageList let i = index ">
+              <td scope="col">{{e.StorageSn}}</td>
+              <!--<td scope="col">{{e.DepotSn}}</td>-->
+              <td scope="col">{{e.AssetSn}}</td>
+              <td scope="col">{{e.AssetName}}</td>
+              <td scope="col">{{e.VenderName}}</td>
+              <td scope="col">{{e.Amount}}</td>
+              <td scope="col">{{e.Price}}</td>
+              <!--<td scope="col">{{e.Remark}}</td>-->
+              <td scope="col">{{e.ManageType}}</td>
+              <td scope="col">
+    
+
+                <a class="btn btn-info btn-lg" (click)="openModal('Edit',e ,i);">
+                  <span class="fas fa-pen "></span>
+                </a>
+                <a class="btn btn-danger btn-lg" (click)="deleteconfirmation(e,i)">
+                  <span class="fas fa-trash-alt"></span>
+                </a>
+                <!--|
+  <button type="button" class="btn btn-default btn-danger" (click)="openModal('Test',e );">
+    <span class="glyphicon glyphicon-trash"></span> Test
+  </button>-->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+
+
+
+
+
+
+        <ul class="pagination" *ngIf="refobj.StorageList?.length>0">
+          <li class="page-item"><a class="page-link" href="#">Prev</a></li>
+          <li class="page-item active">
+            <a class="page-link" href="#">1</a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item"><a class="page-link" href="#">4</a></li>
+          <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <!--<button class="btn btn-secondary mr-1" data-toggle="modal" type="button" (click)="openModal('Add',{} );;listactionName='Add'">
+          Create New to List
+        </button>-->
+        <button type="submit" class="btn btn-primary" [disabled]="largeModal.isShown">確認</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+<!--<div class="modal-footer">
+  <button type="button" class="btn btn-danger" (click)="bsModalRef.hide()">{{closeBtnName}}</button>
+</div>-->
+<div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"     > 
+  <div class="modal-dialog modal-lg" role="document" >
+    <div class="modal-content" style="background-color:gray">
+      <div class="modal-header" ngxModalDraggable>
+        <h4 class="modal-title">新增資產明細</h4>
+        <button type="button" class="close" (click)="largeModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #DForm='ngForm' name="editform" (ngSubmit)="SubmitList(DForm)" class="form-horizontal">
+          <div class="form-group row">
+            <div class="col-md-6">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input class="form-control" placeholder="請輸入 入庫(請購)單"
+                       #StorageSn="ngModel" required [(ngModel)]='refSubObj.StorageSn' name="StorageSn">
+                <span class="help-bpx" *ngIf="StorageSn.touched && !StorageSn.valid ">*</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input class="form-control" placeholder="請輸入 資產編號"
+                       #AssetSn="ngModel" required [(ngModel)]='refSubObj.AssetSn' name="AssetSn">
+                <span class="help-bpx" *ngIf="AssetSn.touched && !AssetSn.valid ">*</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input class="form-control" placeholder="請輸入 資產名稱"
+                       #AssetName="ngModel" required [(ngModel)]='refSubObj.AssetName' name="AssetName">
+                <span class="help-bpx" *ngIf="AssetName.touched && !AssetName.valid ">*</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input class="form-control" placeholder="請輸入 廠商"
+                       #VenderName="ngModel" required [(ngModel)]='refSubObj.VenderName' name="VenderName">
+                <span class="help-bpx" *ngIf="VenderName.touched && !VenderName.valid ">*</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input class="form-control" placeholder="請輸入 數量"
+                       #Amount="ngModel" required [(ngModel)]='refSubObj.Amount' name="Amount">
+                <span class="help-bpx" *ngIf="Amount.touched && !Amount.valid ">*</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input class="form-control" placeholder="請輸入 單價"
+                       #Price="ngModel" required [(ngModel)]='refSubObj.Price' name="Price">
+                <span class="help-bpx" *ngIf="Price.touched && !Price.valid ">*</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input class="form-control" placeholder="請輸入 備註"
+                       #Remark="ngModel" required [(ngModel)]='refSubObj.Remark' name="Remark">
+                <span class="help-bpx" *ngIf="Remark.touched && !Remark.valid ">*</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input class="form-control" placeholder="請輸入 控管類別"
+                       #ManageType="ngModel" required [(ngModel)]='refSubObj.ManageType' name="ManageType">
+                <span class="help-bpx" *ngIf="ManageType.touched && !ManageType.valid ">*</span>
+              </div>
+            </div>
+          </div>
+           
+         </form>
+
+
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="largeModal.hide()">取消</button>
+        <button type="button" class="btn btn-primary" (click)="openModal('Save',refSubObj,editIndex)" >確認</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

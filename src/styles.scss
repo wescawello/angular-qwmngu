@@ -1,1 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
+@import url(https://fonts.googleapis.com/earlyaccess/cwtexkai.css);
+
+@import "~@coreui/coreui/scss/coreui";
+
+body{
+font-family: 'cwTeXKai', serif;
+}
+
+.sortable-item {
+  padding: 6px 12px;
+  margin-bottom: 4px;
+  font-size: 10px;
+  line-height: 1.4em;
+  text-align: center;
+  cursor: grab;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  border-color: #adadad;
+}
+.sortable-item-active {
+  background-color: #e6e6e6;
+  box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+}

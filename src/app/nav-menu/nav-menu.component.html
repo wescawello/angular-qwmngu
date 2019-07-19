@@ -1,0 +1,136 @@
+<header >
+  <nav class='navbar navbar-expand-sm navbar-toggleable-sm navbar-light  border-bottom box-shadow mb-3'>
+    <div class="container">
+      <button  #fortrace class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-label="Toggle navigation"
+              [attr.aria-expanded]="isExpanded" (click)="toggle()">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!--old class  flex-sm-row-reverse-->
+      <a class="navbar-brand" [routerLink]='["/"]'  (click)="collapse()">{{title}}</a>
+
+      <div class="btn-group" dropdown placement="bottom right" [style.display]="!isExpanded ? 'none' :'inline-block'">
+        <a class="nav-link  text-dark" href="javascript:void(0)" (click)="login()" *ngIf="!afAuth.auth.currentUser">登入</a>
+        <a dropdownToggle class="btn   dropdown-toggle"
+           aria-controls="dropdown-basic"
+           *ngIf="afAuth.auth.currentUser">
+          <span *ngIf="(authService.UnReadMessagesCount$|async) >0">
+            <fa-icon [icon]="['fas', 'envelope-open-text']" size="xs"></fa-icon>
+            <i style="background-color: brown; color:aliceblue;border-radius: 50%;">  {{ authService.UnReadMessagesCount$|async}} </i>
+          </span>
+            <img [src]="afAuth.auth.currentUser.photoURL" class="square"
+                  [ngClass]="{
+               square:true,
+               squareoff:(authService.CurrUser|async)?.Status=='offline',
+               squareon:(authService.CurrUser|async)?.Status!='offline'
+               }"
+                 width="30" height="30" *ngIf="afAuth.auth.currentUser.photoURL ;else elseTmpl" />
+            <ng-template #elseTmpl>
+              <i class="fas fa-address-card fa-2x"></i>
+            </ng-template>
+        </a>
+        <ul *dropdownMenu class="dropdown-menu dropdown-menu-right"
+            role="menu" aria-labelledby="button-basic">
+
+          <li role="menuitem">
+            <a class="dropdown-item" [routerLink]='["/messages"]' (click)="collapse()">{{afAuth.auth.currentUser?.displayName}}的信息</a>
+          </li>
+          <li role="menuitem">
+            <a class="dropdown-item" [routerLink]='["/my-profile"]' (click)="collapse()">個人資料</a>
+          </li>
+          <li role="menuitem">
+            <a class="dropdown-item" [routerLink]='["/chats"]' (click)="collapse()">chatroom</a>
+          </li>
+          <li class="divider dropdown-divider"></li>
+          <li role="menuitem">
+            <a class="dropdown-item" href="javascript:void(0)" (click)="logout()">登出</a>
+            <a class="dropdown-item" [routerLink]='["/cam-test"]' (click)="collapse()">test cam</a>
+          </li>
+        </ul>
+      </div>
+
+
+      <div class="navbar-collapse collapse d-sm-inline-flex text-center flex-sm-row-reverse" style="flex-grow:0" [ngClass]='{"show": isExpanded}'>
+        <ul class="navbar-nav flex-grow">
+          <li class="nav-item" [routerLinkActive]='["link-active"]'>
+            <a class="nav-link text-dark" [routerLink]='["/storage-order-mgr"]'  (click)="collapse()">進貨</a>
+          </li>
+          <li class="nav-item" [routerLinkActive]='["link-active"]'>
+            <a class="nav-link text-dark" [routerLink]='["/trans-action"]'  (click)="collapse()">調撥</a>
+          </li>
+          <li class="nav-item" [routerLinkActive]='["link-active"]'>
+            <a class="nav-link text-dark" [routerLink]='["/discard-order-mgr"]'  (click)="collapse()">報廢</a>
+          </li>
+          <li class="nav-item" [routerLinkActive]='["link-active"]'>
+            <a class="nav-link text-dark" [routerLink]='["/inventory"]'  (click)="collapse()">盤點  </a>
+          </li>
+          <!--<li class="nav-item" [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
+    <a class="nav-link text-dark" [routerLink]='["/"]'>Home</a>
+  </li>
+  <li class="nav-item" [routerLinkActive]='["link-active"]'>
+    <a class="nav-link text-dark" [routerLink]='["/counter"]'>Counter</a>
+  </li>
+  <li class="nav-item" [routerLinkActive]='["link-active"]'>
+    <a class="nav-link text-dark" [routerLink]='["/fetch-data"]'>Fetch data</a>
+  </li>
+  <li class="nav-item" [routerLinkActive]='["link-active"]'>
+    <a class="nav-link text-dark" [routerLink]='["/register"]'>Register/Login</a>
+  </li>
+      <li class="nav-item" [routerLinkActive]='["link-active"]'>
+        <a class="nav-link  text-dark" href="javascript:void(0)" (click)="login()">登入</a>
+      </li>
+
+      <li class="nav-item" [routerLinkActive]='["link-active"]'>
+        <a class="nav-link  text-dark" href="javascript:void(0)" (click)="logout()">登出</a>
+      </li>-->
+        </ul>
+      </div>
+      
+      <div class="btn-group" dropdown placement="bottom right" [style.display]="isExpanded ? 'none' :'inline-block'">
+        <a class="nav-link  text-dark" href="javascript:void(0)" (click)="login()" *ngIf="!afAuth.auth.currentUser">登入</a>
+        <a dropdownToggle class="btn   dropdown-toggle"
+           aria-controls="dropdown-basic"
+           *ngIf="afAuth.auth.currentUser">
+          <span *ngIf="(authService.UnReadMessagesCount$|async) >0">
+            <fa-icon [icon]="['fas', 'envelope-open-text']" size="xs"></fa-icon>
+            <i style="background-color: brown; color:aliceblue;border-radius: 50%;">  {{ authService.UnReadMessagesCount$|async       }} </i>
+          </span>
+          <img [src]="afAuth.auth.currentUser.photoURL" [ngClass]="{
+               square:true,
+               squareoff:(authService.CurrUser|async)?.Status=='offline',
+               squareon:(authService.CurrUser|async)?.Status!='offline'
+               }" width="30" height="30" *ngIf="afAuth.auth.currentUser.photoURL ;else elseTmpl" />
+
+
+          <ng-template #elseTmpl>
+            <i class="fas fa-address-card fa-2x"></i>
+          </ng-template>
+        </a>
+        <ul *dropdownMenu class="dropdown-menu dropdown-menu-right"
+            role="menu" aria-labelledby="button-basic">
+
+          <li role="menuitem">
+            <a class="dropdown-item" [routerLink]='["/messages"]' (click)="collapse()">
+              {{afAuth.auth.currentUser?.displayName}}的信息       <i style="background-color: dodgerblue; color:aliceblue;border-radius: 50%;">  {{ (authService.Messages$|async).length}} </i>
+              <i style="background-color: brown; color:aliceblue;border-radius: 50%;" *ngIf="(authService.UnReadMessagesCount$|async) >0">  {{ authService.UnReadMessagesCount$|async}} </i>
+            </a>
+
+          </li>
+          <li role="menuitem">
+            <a class="dropdown-item" [routerLink]='["/my-profile"]' (click)="collapse()">個人資料</a>
+          </li>
+          <li role="menuitem">
+            <a class="dropdown-item" [routerLink]='["/chats"]' (click)="collapse()">chatroom</a>
+          </li>
+          <li class="divider dropdown-divider"></li>
+          <li role="menuitem">
+            <a class="dropdown-item" href="javascript:void(0)" (click)="logout()">登出</a>
+            <a class="dropdown-item" [routerLink]='["/cam-test"]' (click)="collapse()">test cam</a>
+          </li>
+        </ul>
+      </div>
+
+
+
+    </div>
+  </nav>
+</header>

@@ -1,0 +1,139 @@
+
+ 
+<div>
+  <!--<p>
+    Change quantity of tabs by manipulating tabs array
+  </p>-->
+
+  <input [(ngModel)]="DepName" #ctrl="ngModel" placeholder="輸入部門名稱" required>
+  <input [(ngModel)]="AssetName" #ctrl2="ngModel" placeholder="輸入盤點項目" required>
+
+  <button type="button" class="btn btn-primary btn-sm" (click)="addNewTab()" [disabled]="!ctrl.value || !ctrl2.value">
+    新增
+  </button>
+  <button type="button" class="btn btn-primary btn-sm" (click)="tabs = []" *ngIf="tabs.length">
+    移除所有項目
+  </button>
+  <hr />
+  <div *ngIf="tabs.length>0">
+    <input [(ngModel)]="Users" #pusers="ngModel" placeholder="輸入盤點人員" (focus)="picker='';largeModal.show()" required>
+    <button type="button" class="btn btn-primary btn-sm" [disabled]="!pusers.value" (click)="genWorkSheet2();">
+      產出盤點單
+    </button>
+  </div>
+  <tabset #tabset>
+    <!--<tab heading="Static title">Static content</tab>-->
+    <tab *ngFor="let tabz of tabs"
+         [heading]="tabz.title"
+         [active]="tabz.active"
+         (selectTab)="tabz.active = true"
+         (deselect)="tabz.active = false"
+         [disabled]="tabz.disabled"
+         [removable]="tabz.removable"
+         (removed)="removeTabHandler(tabz)"
+         [customClass]="tabz.customClass">
+      <!--{{tabz?.content}}-->
+      <div>
+        盤點方式:
+        <select [(ngModel)]="tabz.wayrole" (change)="reInitTab(tabz)">
+          <option>存在</option>
+          <option>狀態</option>
+        </select>
+      </div>
+      <div *ngIf="tabz.wayrole=='狀態'">
+        盤點分類(鍵入逗號相隔):      <input #SS /><button (click)="addStatus(tabz,{Name:SS.value})">add</button>         {{  tabz.Status |json}}
+        <ul>
+          <li *ngFor="let yyy of tabz.Status;let ps=index">
+
+            <button (click)="spStatus(tabz,ps)" *ngIf="tabz.Status.length>2 && ps>0">delete</button>
+            {{yyy.Name}}
+          </li>
+        </ul>
+      </div>
+      <!--tabz.wayrole:{{tabz.wayrole }}-->
+
+      <table class="table table-responsive-sm table-sm">
+        <tr>
+          <th>財產編號</th>
+          <th>購買|盤點日期</th>
+          <th>放置地點</th>
+          <th>歸屬人員</th>
+          <th>Action</th>
+        </tr>
+        <tr *ngFor="let docker of (tabz?.items|async),let i = index" [ngClass]="{'redbox':docker.UserId}">
+          <td>{{docker.AssetSn}}</td>
+          <td>{{docker.InventoryDate|date:'yyyy-MM-dd'}}</td>
+          <td>{{docker.PlaceIn}}</td>
+          <td>{{docker.UserId}}</td>
+          <td>
+            <span class="badge " [ngClass]="{
+                    'badge-success':!docker.UserId,
+                    'badge-info':docker.UserId
+                    }" (click)="redit(tabz ,i)">{{docker.UserId ? '要盤': '不盤'}}</span>
+          </td>
+        </tr>
+
+      </table>
+
+
+
+
+
+
+    </tab>
+  </tabset>
+  <!--{{WorkOrders|async|json}}-->
+  <table class="table table-responsive-sm table-sm" *ngIf="(WorkOrders|async).length>0">
+    <tr>
+      <th>盤點人員</th>
+      <th>盤點Link</th>
+    </tr>
+    <tr *ngFor="let w of (WorkOrders|async),let i = index">
+      <td>{{w.Name}}</td>
+      <td>
+        <a class="nav-link text-dark" [routerLink]='["/inventory-action",w.Id]'>
+          <span class="badge badge-success">
+            {{w.Id}}
+          </span>
+        </a>
+      </td>
+    </tr>
+  </table>
+
+  <div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  >
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">選擇部門單位  </h4>
+          <button type="button" class="close" (click)="largeModal.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="faketree">
+            <!--聯動下拉爸 OR 樹狀圖<br />
+            {{users|json}}-->
+            <div *ngFor="let user of users"> 
+              <input type="checkbox" [(ngModel)]="user.checked" [id]="user.Name+'_check'">
+              <label class="form-check-label" [for]="user.Name+'_check'">
+                {{user.Name}}
+              </label>
+            </div>
+          </div>
+
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="largeModal.hide()">Close</button>
+          <button type="button" class="btn btn-primary" (click)="largeModal.hide();press(users,pusers)">Save changes</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div>
+
+  <pre>
+  <!--<a class="nav-link text-dark" [routerLink]='["/inventory-action","okaDO72XUxr2SzmU9g44"]'>okaDO72XUxr2SzmU9g44</a>-->
+
+</pre>
+</div>

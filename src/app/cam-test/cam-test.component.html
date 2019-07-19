@@ -1,0 +1,72 @@
+<div id="container">
+
+
+
+
+
+
+
+
+  <div id="vid_container" [ngClass]="{left:obboolangle$|async}">
+    <video id="video" autoplay="" playsinline="" style="opacity:0.6;"></video>
+    <canvas class="drawingBuffer" style="z-index: 3; position: relative;"></canvas>
+    <div id="video_overlay"></div>
+  </div>
+  <div style=" height:95vh;z-index:999; opacity:0.5; ">
+    <table class="table table-responsive-sm table-sm table-ellipsis" *ngIf="false">
+      <tr>
+        <th>財產編號</th>
+        <th>購買|盤點日期</th>
+        <th>放置地點</th>
+        <th>盤點人員</th>
+        <th>Action</th>
+      </tr>
+      <tr *ngFor="let docker of (localItems$ |async ),let i = index" [ngClass]="{'redbox':docker.UserId}">
+        <td>{{docker.AssetSn}}</td>
+        <td>{{docker.InventoryDate|date:'yyyy-MM-dd HH:mm:ss'  }}</td>
+        <td>{{docker.PlaceIn}}</td>
+        <td>{{docker.UserId}}</td>
+        <td>
+          <span class="badge " [ngClass]="{
+                    'badge-success':!docker.UserId,
+                    'badge-info':docker.UserId
+                    }">{{docker.UserId ? 'BRAbra': '盤點確認'}}</span>
+        </td>
+      </tr>
+
+    </table>
+    <alert type="md-color">
+      Totle: <strong>  {{(localItems$ |async).length}},</strong>
+      已盤:   <strong>        {{Passcount}}      </strong>
+      ,這次盤 <strong>{{Currpass}}</strong>
+    </alert>
+    <div *ngFor="let alert of alerts">
+      <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout" (onClosed)="onClosed(alert)">{{ alert.msg }}</alert>
+    </div>
+    <accordion [isAnimated]="true">
+      <accordion-group *ngFor="let docker of (localItems$ |async ),let i = index"
+                       
+                       [panelClass]="{'redbox':docker.InventoryDate,'yellowbox':docker.UserId}">
+
+        <span accordion-heading>
+          <i class='fa fa-users'></i> {{docker.AssetSn}}
+        </span>
+
+        <span *ngIf="i==0"> vvs{{decoderService.vvs|json}} </span>
+        <span *ngIf="i==0"> vcs{{decoderService.vcs|json}} </span>
+        <span *ngIf="i==1"> vvs{{decoderService.vvs?.width }}/{{ decoderService.vvs?.height }} </span>
+        <span *ngIf="i==1"> vcs{{decoderService.vcs?.width}}/{{ decoderService.vcs?.height }} </span>
+        <pre *ngIf="i==2">  {{decoderService.qstate|json}}  </pre>
+
+
+        <span *ngIf="docker">{{i}} {{docker|json}} </span>
+      </accordion-group>
+    </accordion>
+  </div>
+  <div id="gui_controls" style="opacity:0.4;" [ngClass]="{left:obboolangle$|async}" >
+    <button id="switchCameraButton" name="switch Camera" type="button" aria-pressed="true" ></button>
+    <button id="takePhotoButton" name="take Photo" (click)="goback()" type="button"></button>
+    <button id="toggleFullScreenButton" name="toggle FullScreen" (click)="screenfullService.toggle()" type="button" aria-pressed="false" style="display: block;"></button>
+  </div>
+</div>
+ 

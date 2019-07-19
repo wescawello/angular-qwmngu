@@ -1,69 +1,79 @@
-import { Component } from '@angular/core';
-import { AuthService } from '../core/auth.service'
-import { Router, Params } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { Component, OnInit } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { auth } from 'firebase/app';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { Element } from '@angular/compiler';
+import { AuthService } from '../Service/auth.service';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.css']
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
+  afAuth: AngularFireAuth;
+  title: string;
+  authService: AuthService
+  constructor(public bsModalRef: BsModalRef) {
 
-  registerForm: FormGroup;
-  errorMessage: string = '';
-  successMessage: string = '';
+  }
+  tarx(s: string, p: HTMLInputElement) {
+     
+    p.type = s == 'd' ? 'text' : 'password'
 
-  constructor(
-    public authService: AuthService,
-    private router: Router,
-    private fb: FormBuilder
-  ) {
-    this.createForm();
-   }
+     
+  }
+  async login(s: string, value) {
+    let pu: Promise<firebase.auth.UserCredential>;
 
-   createForm() {
-     this.registerForm = this.fb.group({
-       email: ['', Validators.required ],
-       password: ['',Validators.required]
-     });
-   }
+    switch (s) {
+      case "google":
+        pu=  this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
 
-   tryFacebookLogin(){
-     this.authService.doFacebookLogin()
-     .then(res =>{
-       this.router.navigate(['/user']);
-     }, err => console.log(err)
-     )
-   }
+        break;
+      default:
+        let { email, password } = value;
+        pu = this.authService.login(email, password) 
 
-   tryTwitterLogin(){
-     this.authService.doTwitterLogin()
-     .then(res =>{
-       this.router.navigate(['/user']);
-     }, err => console.log(err)
-     )
-   }
+        break
+    }
+    pu.then(p => {
+      this.bsModalRef.hide();
+      console.log(this.afAuth.auth);
 
-   tryGoogleLogin(){
-     this.authService.doGoogleLogin()
-     .then(res =>{
-       this.router.navigate(['/user']);
-     }, err => console.log(err)
-     )
-   }
 
-   tryRegister(value){
-     this.authService.doRegister(value)
-     .then(res => {
-       console.log(res);
-       this.errorMessage = "";
-       this.successMessage = "Your account has been created";
-     }, err => {
-       console.log(err);
-       this.errorMessage = err.message;
-       this.successMessage = "";
-     })
-   }
+    }).catch(err => alert(err));
+    //try {
+    //  let p = await pu;
+    //  console.log(p);
+    //  this.bsModalRef.hide();
+    //} catch (e) {
+    //  alert(e);
+    //}
+    
+  }
+  logout() {
+    this.afAuth.auth.signOut();
+  }
+  tryRegister(value: { email: string, password: string }) {
+    let { email, password } = value;
+    this.afAuth.auth.createUserWithEmailAndPassword(email, password)
+      .then(res => {
+        console.log(res);
+        this.afAuth.auth.signInWithEmailAndPassword(email, password).then(user => {
+          this.bsModalRef.hide();
+        }).catch(err => {
+          console.log(err);
+          alert(err);
 
+        }) 
+      }, err => {
+        console.log(err);
+        alert(err);
+
+      });
+  }
+
+  ngOnInit() {
+  }
+  
 }

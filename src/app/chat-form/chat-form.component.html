@@ -1,0 +1,20 @@
+<ng-container *ngIf="chat$|async as chat ">
+  <div *ngIf="chatId$ |async ; else elseTmpl">
+    <input class="chatInput"
+           [(ngModel)]="newMsg" (keydown.enter)="submit(chat.id)" />
+    <button class="chatButton" (click)="submit(chat.id)">
+
+      Send
+    </button>
+  </div>
+  <ng-template #elseTmpl>
+
+
+    <input class="chatInput"
+           [(ngModel)]="newRoom" (keydown.enter)="newRoomFn(newRoom)" />
+    <button class="chatButton" (click)="newRoomFn(newRoom)">New room</button>
+  </ng-template>
+
+</ng-container>
+
+

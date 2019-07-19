@@ -1,0 +1,9 @@
+.redbox
+{
+  background-color:red;
+  color:whitesmoke;
+  
+}
+.badge {
+  cursor: pointer;
+}

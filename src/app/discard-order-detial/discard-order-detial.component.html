@@ -1,0 +1,289 @@
+<div class="modal-header" ngxModalDraggable>
+  <h4 class="modal-title pull-left">{{actionName=='Add' ? '新增' : '修改'}} 報廢單</h4>
+  <div [style.display]="'none'"> 
+    {{ob.refobj$ | async|json}}
+  </div>
+   
+   
+  <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body" *ngIf="ob.refobj$ | async as refobj">
+  <form #DForm='ngForm' name="editform" (ngSubmit)="SubmitDetail(DForm)" class="form-horizontal">
+    <div class="form-group row">
+      <div class="col-md-6">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-user"></i></span>
+          </div>
+          <input class="form-control" placeholder="請輸入報廢單號"
+                 #DiscardSn="ngModel" required [(ngModel)]='refobj.DiscardSn' name="DiscardSn">
+          <span class="help-bpx" *ngIf="DiscardSn.touched && !DiscardSn.valid ">*</span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-user"></i></span>
+          </div>
+          <input class="form-control" placeholder="請輸入報廢代號"
+                 #DepotSn="ngModel" required [(ngModel)]='refobj.DepotSn' name="DepotSn">
+          <span class="help-bpx" *ngIf="DepotSn.touched && !DepotSn.valid ">*</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-6">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-user"></i></span>
+          </div>
+          <input class="form-control" placeholder="請輸入單位名稱"
+                 #DepotName="ngModel" required [(ngModel)]='refobj.DepotName' name="DepotName">
+          <span class="help-bpx" *ngIf="DepotName.touched && !DepotName.valid ">*</span>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-user"></i></span>
+          </div>
+          <input class="form-control" placeholder="請輸入報廢原因"
+                 #DiscardType="ngModel" required [(ngModel)]='refobj.DiscardType' name="DiscardType">
+          <span class="help-bpx" *ngIf="DiscardType.touched && !DiscardType.valid ">*</span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-6">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-user"></i></span>
+          </div>
+          <input class="form-control" placeholder="請輸入報廢日期"
+                 #DiscardDate="bsDatepicker" required name="DiscardDate" bsDatepicker
+                 [(bsValue)]="refobj.DiscardDate"
+                 value="{{ refobj.DiscardDate | date:'yyyy-MM-dd' }}"
+                 [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }">
+          <span class="help-bpx" *ngIf="DiscardDate.touched && !DiscardDate.valid ">*</span>
+        </div>
+      </div>
+      <div class="col-md-6">
+
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-md-12">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fa fa-user"></i></span>
+          </div>
+          <input class="form-control" placeholder="請輸入備註"
+                 #Remark="ngModel" required [(ngModel)]='refobj.Remark' name="Remark">
+          <span class="help-bpx" *ngIf="Remark.touched && !Remark.valid ">*</span>
+        </div>
+      </div>
+    </div>
+    <span [style.display]="'none'" >
+      fdfs
+      {{refobj|json}}
+    </span>
+     
+
+      <div class="card">
+        <div class="card-header">
+          <button class="btn btn-pill btn-primary" type="button" (click)="openModal('Add',{} );listactionName='Add';" [disabled]="!refobj.DiscardSn">
+            <i class="cui-cart icons font-2xl btn-danger mt-4"></i>
+            新增細項
+
+          </button>
+        </div>
+        <div class="card-body">
+          <div *ngIf="!refobj.DiscardList?.length>0">
+            <h4> 請點選「新增細項」，建立資產明細</h4>
+          </div>
+          <table class="table" *ngIf="refobj.DiscardList?.length>0">
+            <thead>
+              <tr>
+                <th scope="col"> 報廢單號</th>
+                <th scope="col">BelongingsSn </th>
+                <th scope="col">AssetSn</th>
+                <th scope="col">AssetName</th>
+                <th scope="col">BarCode</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Remark</th>
+                <th scope="col">ManageType</th>
+                <th scope="col" style="align-content: center"><!--Action--></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let e of refobj.DiscardList let i = index ">
+                <td scope="col">{{e.DiscardSn}}</td>
+                <td scope="col">{{e.BelongingsSn}}</td>
+                <td scope="col">{{e.AssetSn}}</td>
+                <td scope="col">{{e.AssetName}}</td>
+                <td scope="col">{{e.BarCode}}</td>
+                <td scope="col">{{e.Amount}}</td>
+                <td scope="col">{{e.Remark}}</td>
+                <td scope="col">{{e.ManageType}}</td>
+                <td scope="col">
+
+                  <a class="btn btn-info btn-lg" (click)="openModal('Edit',e ,i);">
+                    <span class="fas fa-pen "></span>
+                  </a>
+                  <a (click)="deleteconfirmation(e,i)" class="btn btn-danger btn-lg">
+                    <span class="fas fa-trash-alt"></span>
+                  </a>
+
+       
+
+ 
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+
+
+
+
+
+
+          <ul class="pagination" *ngIf="refobj.DiscardList?.length>0">
+            <li class="page-item"><a class="page-link" href="#">Prev</a></li>
+            <li class="page-item active">
+              <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <!--<button class="btn btn-secondary mr-1" data-toggle="modal" type="button" (click)="openModal('Add',{} );;listactionName='Add'">
+          Create New to List
+        </button>-->
+          <button type="submit" class="btn btn-primary" [disabled]="largeModal.isShown">Submit</button>
+        </div>
+      </div>
+  </form>
+</div>
+<div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  >
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" style="background-color:gray">
+      <div class="modal-header" ngxModalDraggable>
+        <h4 class="modal-title">資產明細</h4>
+        <button type="button" class="close" (click)="largeModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #DForm='ngForm' name="editform" (ngSubmit)="SubmitList(DForm)" class="form-horizontal">
+          <div class="form-group row">
+            <div class="col-md-8">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input class="form-control" placeholder="請輸入報廢單號"
+                       #DiscardSn="ngModel" required [(ngModel)]='refSubObj.DiscardSn' name="DiscardSn">
+                <span class="help-bpx" *ngIf="DiscardSn.touched && !DiscardSn.valid ">*</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input class="form-control" placeholder="請輸入資產編號"
+                       #AssetSn="ngModel" required [(ngModel)]='refSubObj.AssetSn' name="AssetSn">
+                <span class="help-bpx" *ngIf="AssetSn.touched && !AssetSn.valid ">*</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input class="form-control" placeholder="請輸入 資產名稱"
+                       #AssetName="ngModel" required [(ngModel)]='refSubObj.AssetName' name="AssetName">
+                <span class="help-bpx" *ngIf="AssetName.touched && !AssetName.valid ">*</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input class="form-control" placeholder="Enter BelongingsSn"
+                       #BelongingsSn="ngModel" required [(ngModel)]='refSubObj.BelongingsSn' name="BelongingsSn">
+                <span class="help-bpx" *ngIf="BelongingsSn.touched && !BelongingsSn.valid ">*</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input class="form-control" placeholder="請輸入 數量"
+                       #Amount="ngModel" required [(ngModel)]='refSubObj.Amount' name="Amount">
+                <span class="help-bpx" *ngIf="Amount.touched && !Amount.valid ">*</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input class="form-control" placeholder="Enter BarCode"
+                       #BarCode="ngModel" required [(ngModel)]='refSubObj.BarCode' name="BarCode">
+                <span class="help-bpx" *ngIf="BarCode.touched && !BarCode.valid ">*</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-6">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input class="form-control" placeholder="Enter Remark"
+                       #Remark="ngModel" required [(ngModel)]='refSubObj.Remark' name="Remark">
+                <span class="help-bpx" *ngIf="Remark.touched && !Remark.valid ">*</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-user"></i></span>
+                </div>
+                <input class="form-control" placeholder="請輸入 控管類別"
+                       #ManageType="ngModel" required [(ngModel)]='refSubObj.ManageType' name="ManageType">
+                <span class="help-bpx" *ngIf="ManageType.touched && !ManageType.valid ">*</span>
+              </div>
+            </div>
+          </div>
+
+        </form>
+
+
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="largeModal.hide()">取消</button>
+        <button type="button" class="btn btn-primary" (click)="openModal('Save',refSubObj,editIndex)">確認</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>

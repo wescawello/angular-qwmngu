@@ -1,3 +1,5 @@
-<main>
-	<router-outlet></router-outlet>
-</main>
+<!--The content below is only a placeholder and can be replaced.-->
+<app-nav-menu [ngClass]="{fixedHeader:isSticky}" *ngIf="ly.showNav|async"></app-nav-menu>
+<div class="container"   >
+  <router-outlet></router-outlet>
+</div>
