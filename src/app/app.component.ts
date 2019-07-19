@@ -25,7 +25,7 @@ export class AppComponent implements   AfterViewChecked{
       filter(p => this.connn)
 
     ).subscribe((event) => {
-      console.log('ddd');
+      //console.log('ddd');
       if (ly.showNav.getValue()) {
         let currtop = document.body.getBoundingClientRect().top;
         this.connn = false;
@@ -38,7 +38,7 @@ export class AppComponent implements   AfterViewChecked{
 
         })
         //this.isSticky = window.pageYOffset >= 50;
-        console.log(scrollPos);
+       // console.log(scrollPos);
       }
  
 

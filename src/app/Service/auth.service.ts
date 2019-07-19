@@ -21,6 +21,9 @@ export class AuthService {
   emitoff: boolean = true;
   idleaction: Observable<Event[]>;
   rewait: Subscription;
+  rewaitx: Subscription;
+
+
   authState: firebase.auth.UserCredential;
   currentUserId: string;
   user$: Observable<any>;
@@ -52,6 +55,13 @@ export class AuthService {
         console.log(auth);
         if (auth) {
           this._ngUnsubscribe = new Subject();
+          if (this.rewait) {
+            this.rewait.unsubscribe();
+          }
+          if (this.rewaitx) {
+            this.rewaitx.unsubscribe();
+          }
+
           this.sMsgs$ = this.afs.collection<IMessage>(`messages/${auth.uid}/msgs`, ref => ref.orderBy("CreateDate", "asc")).valueChanges({ idField: 'xid' })
             .pipe(
               takeUntil(this._ngUnsubscribe),
@@ -102,14 +112,7 @@ export class AuthService {
           this.idleaction = exitaction.pipe(bufferTime(15 * 1000), filter(arr => arr.length === 0 && this.emitoff), takeUntil(this._ngUnsubscribe));
 
           this.rewait = this.idleaction.subscribe(async x => await this.offFn(x));
-          exitaction.pipe(filter(f => !this.emitoff), takeUntil(this._ngUnsubscribe)).subscribe(async x => {
-            this.emitoff = true;
-            console.log(new Date(), 'not idle');
-            //this.idleaction = this.idleaction.pipe(bufferTime(15 * 1000));
-            await this.setUserStatus("online");
-            this.rewait.unsubscribe();
-            this.rewait = this.idleaction.subscribe(async x => await this.offFn(x));
-          });
+          this.rewaitx = exitaction.pipe(bufferTime(1000),filter(f => !this.emitoff && f.length>0 ), takeUntil(this._ngUnsubscribe)).subscribe(async x => await this.onFn(x));
 
 
 
@@ -137,7 +140,7 @@ export class AuthService {
     this.CurrUser$.pipe(tap(o => {
       if (o) {
 
-        this.emitoff = Object.values(o).includes("online")
+        this.emitoff = o['Status'] == "online";
       }
 
       //
@@ -159,6 +162,16 @@ export class AuthService {
     console.log(new Date(), 'idle', 'after', 15, 's', x);
     await this.setUserStatus("offline");
   }
+  async  onFn(x) {
+    this.emitoff = true;
+    console.log(new Date(), 'not idle');
+    //this.idleaction = this.idleaction.pipe(bufferTime(15 * 1000));
+    await this.setUserStatus("online");
+    this.rewait.unsubscribe();
+
+    this.rewait = this.idleaction.subscribe(async x => await this.offFn(x));
+  }
+
 
   login(email: string, password: string) {
     return this.afAuth.auth.signInWithEmailAndPassword(email, password)
@@ -195,6 +208,6 @@ export class AuthService {
     };
 
     await this.afs.doc(path).update(data);
-      
+
   }
 }

@@ -20,8 +20,8 @@
             <img [src]="afAuth.auth.currentUser.photoURL" class="square"
                   [ngClass]="{
                square:true,
-               squareoff:(authService.CurrUser|async)?.Status=='offline',
-               squareon:(authService.CurrUser|async)?.Status!='offline'
+               squareoff:(authService.CurrUser$|async)?.Status=='offline',
+               squareon:(authService.CurrUser$|async)?.Status!='offline'
                }"
                  width="30" height="30" *ngIf="afAuth.auth.currentUser.photoURL ;else elseTmpl" />
             <ng-template #elseTmpl>
@@ -96,8 +96,8 @@
           </span>
           <img [src]="afAuth.auth.currentUser.photoURL" [ngClass]="{
                square:true,
-               squareoff:(authService.CurrUser|async)?.Status=='offline',
-               squareon:(authService.CurrUser|async)?.Status!='offline'
+               squareoff:(authService.CurrUser$|async)?.Status=='offline',
+               squareon:(authService.CurrUser$|async)?.Status!='offline'
                }" width="30" height="30" *ngIf="afAuth.auth.currentUser.photoURL ;else elseTmpl" />
 
 
