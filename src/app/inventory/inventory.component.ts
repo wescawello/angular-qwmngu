@@ -69,8 +69,7 @@ const lss = [
   "3737030102",
   "0015000411",
   "2203000000"];
- 
-@Component({
+ @Component({
   selector: 'app-inventory',
   templateUrl: './inventory.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

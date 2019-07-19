@@ -6,11 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { ProgressbarModule } from 'ngx-bootstrap/progressbar';
-import { SortableModule } from 'ngx-bootstrap/sortable';
+
 
 import { NgxScreenfullModule } from '@ngx-extensions/screenfull';
 
@@ -20,6 +16,7 @@ import { CounterComponent } from './counter/counter.component';
 import { DiscardOrderMgrComponent } from './discard-order-mgr/discard-order-mgr.component';
 import { DiscardOrderDetialComponent } from './discard-order-detial/discard-order-detial.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
+
 import { HomeComponent } from './home/home.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { InventoryActionComponent } from './inventory-action/inventory-action.component';
@@ -31,7 +28,7 @@ import { StorageOrderDetialComponent } from './storage-order-detial/storage-orde
 import { TransActionComponent } from './trans-action/trans-action.component';
 import { NgxModalDraggableDirective } from './ngx-modal-draggable.directive';
 
-import { environment } from 'src/environments/environment';
+import { environment } from '../environments/environment';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
@@ -44,12 +41,18 @@ import { faSquare, faCheckSquare, faCamera, faEye, faEnvelopeOpenText } from '@f
 import { faStackOverflow, faGithub, faMedium } from '@fortawesome/free-brands-svg-icons';
  
 
-import { TabsModule } from 'ngx-bootstrap/tabs';
-import { BsDropdownModule } from 'ngx-bootstrap';
-
-import { NgxBootstrapSliderModule } from 'ngx-bootstrap-slider';
-import { AccordionModule } from 'ngx-bootstrap/accordion';
-import { AlertModule } from 'ngx-bootstrap/alert';
+import { BsDropdownModule ,
+TabsModule,
+BsDatepickerModule,
+ModalModule,
+AlertModule,
+PaginationModule,
+SortableModule,
+AccordionModule,
+ProgressbarModule
+ } from 'ngx-bootstrap';
+ 
+ 
 
 import { CamBarcodeComponent } from './cam-barcode/cam-barcode.component';
 import { MyProfileComponent } from './my-profile/my-profile.component';
@@ -100,7 +103,6 @@ import { MessageContainerComponent } from './message-container/message-container
 
     FormsModule,
     HttpClientModule,
-    NgxBootstrapSliderModule,
     NgxScreenfullModule,
     NgxInactivity,
 

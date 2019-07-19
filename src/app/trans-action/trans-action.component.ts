@@ -105,16 +105,12 @@ export class TransActionComponent implements OnInit {
       this.transList.push(...kk);
       this.Fruits$$.next([]);
       this.allAmt = 0;
-      //this.transList = [...this.transList,...kk]
-      //console.log(this.transList);
-     // this.transList.push(Object.assign(new TransList(), regForm.value));
 
    
 
 
       this.random();
 
-     // transList.push(DForm.value);
       this.refobj.Amount = 0;
       this.refobj.AssetName = ''
 

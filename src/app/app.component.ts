@@ -31,7 +31,6 @@ export class AppComponent implements   AfterViewChecked{
         this.connn = false;
 
         this.isSticky = !(currtop > scrollPos || currtop == 0);
-
         scrollPos = currtop;
 
         timer(100).subscribe(p => {
