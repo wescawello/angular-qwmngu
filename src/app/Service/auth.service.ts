@@ -2,21 +2,23 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { BehaviorSubject, merge, Observable, Subject, fromEvent, observable, of, Subscription } from 'rxjs';
-import { tap, map, filter, takeUntil, bufferTime, switchMap } from 'rxjs/operators';
+import { tap, map, filter,take, takeUntil, bufferTime, switchMap,distinctUntilChanged } from 'rxjs/operators';
 import { IMessage } from '../Model/commonModel';
 import { Router } from '@angular/router';
 
-
+type vf = firebase.User & { Status: string }
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  AllUser$ = new BehaviorSubject<firebase.User[]>([]);
-  CurrUser$ = new BehaviorSubject<firebase.User>(null);
+  AllUser$ = new BehaviorSubject<vf[]>([]);
+  CurrUser$ = new BehaviorSubject<vf>(null);
   Messages$ = new BehaviorSubject<(IMessage & { xid: string })[]>([]);
   UnReadMessagesCoun$t = new BehaviorSubject<number>(0);
   sMsgs$: Observable<(IMessage & { xid: string })[]>;
-  refAllUser$: Observable<firebase.User[]>;
+  refAllUser$: Observable<vf[]>;
+  useronline$ = new BehaviorSubject(true);
+
   private _ngUnsubscribe = new Subject();
   emitoff: boolean = true;
   idleaction: Observable<Event[]>;
@@ -88,7 +90,7 @@ export class AuthService {
               ))
             );
 
-          this.refAllUser$ = this.afs.collection<firebase.User>(`users`).valueChanges()
+          this.refAllUser$ = this.afs.collection<vf>(`users`).valueChanges()
             .pipe(
               takeUntil(this._ngUnsubscribe));
           this.refAllUser$.subscribe(o => {
@@ -109,10 +111,26 @@ export class AuthService {
 
           let exitaction = merge(...['keydown', 'click', 'mousemove', 'touchstart', 'scroll'].map(o => fromEvent(document, o)));
 
-          this.idleaction = exitaction.pipe(bufferTime(15 * 1000), filter(arr => arr.length === 0 && this.emitoff), takeUntil(this._ngUnsubscribe));
+          // this.idleaction = ;
 
-          this.rewait = this.idleaction.subscribe(async x => await this.offFn(x));
-          this.rewaitx = exitaction.pipe(bufferTime(1000),filter(f => !this.emitoff && f.length>0 ), takeUntil(this._ngUnsubscribe)).subscribe(async x => await this.onFn(x));
+          // this.rewait = this.idleaction.subscribe(async x => await this.offFn(x));
+          // this.rewaitx =
+          this.useronline$.pipe(distinctUntilChanged()).subscribe(b => {
+
+            if (this.rewait) {
+              this.rewait.unsubscribe();
+            }
+            if(b){
+this.rewait=exitaction.pipe(bufferTime(15 * 1000), filter(arr => arr.length === 0), takeUntil(this._ngUnsubscribe)).subscribe(async x => await this.offFn(x));
+
+            }else{
+this.rewait= exitaction.pipe(take(1), takeUntil(this._ngUnsubscribe)).subscribe(async x => await this.onFn(x));
+
+            }
+
+
+
+          });
 
 
 
@@ -140,7 +158,12 @@ export class AuthService {
     this.CurrUser$.pipe(tap(o => {
       if (o) {
 
-        this.emitoff = o['Status'] == "online";
+        this.emitoff = o.Status == "online";
+        if (this.emitoff != this.useronline$.getValue()) {
+          console.log(this.emitoff);
+          this.useronline$.next(this.emitoff);
+
+        }
       }
 
       //
@@ -158,18 +181,16 @@ export class AuthService {
   }
 
   async offFn(x) {
-    this.emitoff = false;
     console.log(new Date(), 'idle', 'after', 15, 's', x);
     await this.setUserStatus("offline");
   }
   async  onFn(x) {
-    this.emitoff = true;
     console.log(new Date(), 'not idle');
     //this.idleaction = this.idleaction.pipe(bufferTime(15 * 1000));
     await this.setUserStatus("online");
-    this.rewait.unsubscribe();
+    //this.rewait.unsubscribe();
 
-    this.rewait = this.idleaction.subscribe(async x => await this.offFn(x));
+    //this.rewait = this.idleaction.subscribe(async x => await this.offFn(x));
   }
 
 
