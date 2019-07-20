@@ -17,7 +17,7 @@
 
             </span>
           </div>
-          <input  #displayName="ngModel" [(ngModel)]="x.displayName" class="form-control" placeholder="DisplayName">
+          <input  #displayName="ngModel" [(ngModel)]="x.displayName" class="form-control" placeholder="DisplayName" name="displayName">
 
         </div>
         <div class="input-group mb-3">
@@ -41,20 +41,20 @@
 
           </span>
         </div>
-        <input       #pwd="ngModel" [(ngModel)]="x.pwd"                         autocomplete="new-password" class="form-control" placeholder="Password" required="" type="password">
+        <input     #pwd  #pwdn="ngModel" [(ngModel)]="x.pwd"                         autocomplete="new-password" class="form-control" placeholder="Password" required="" type="password">
 
       </div>
       <div class="input-group mb-3">
         <div class="input-group-prepend">
           <span class="input-group-text">
 
-            <fa-icon [icon]="['fas', 'eye']" size="xs" (mousedown)="tarx('d',pwd)" (mouseup)="tarx('u',xpwd)"></fa-icon>
+            <fa-icon [icon]="['fas', 'eye']" size="xs" (mousedown)="tarx('d',xpwd)" (mouseup)="tarx('u',xpwd)"></fa-icon>
 
 
 
           </span>
         </div>
-        <input #xpwd="ngModel" [(ngModel)]="x.xpwd" autocomplete="new-password" class="form-control" placeholder="Confirm Password" required="" type="password">
+        <input #xpwd  #xpwdn="ngModel" [(ngModel)]="x.xpwd" autocomplete="new-password" class="form-control" placeholder="Confirm Password" required="" type="password">
 
       </div>
       <div class="input-group mb-3">

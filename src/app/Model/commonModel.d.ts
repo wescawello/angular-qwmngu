@@ -48,7 +48,7 @@ interface ITabdemo {
   active?: boolean;
   removable?: boolean;
   items?: BehaviorSubject<ISubInventory[]>;
-
+  customClass?: any;
 }
 interface IWorkOrder {
   Name?: string;

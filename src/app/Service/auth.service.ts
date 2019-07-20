@@ -14,7 +14,7 @@ export class AuthService {
   AllUser$ = new BehaviorSubject<vf[]>([]);
   CurrUser$ = new BehaviorSubject<vf>(null);
   Messages$ = new BehaviorSubject<(IMessage & { xid: string })[]>([]);
-  UnReadMessagesCoun$t = new BehaviorSubject<number>(0);
+  UnReadMessagesCount$ = new BehaviorSubject<number>(0);
   sMsgs$: Observable<(IMessage & { xid: string })[]>;
   refAllUser$: Observable<vf[]>;
   useronline$ = new BehaviorSubject(true);
@@ -153,7 +153,7 @@ this.rewait= exitaction.pipe(take(1), takeUntil(this._ngUnsubscribe)).subscribe(
 
 
 
-      this.UnReadMessagesCoun$t.next(o.filter(p => !p.Read).length);
+      this.UnReadMessagesCount$.next(o.filter(p => !p.Read).length);
     });
     this.CurrUser$.pipe(tap(o => {
       if (o) {

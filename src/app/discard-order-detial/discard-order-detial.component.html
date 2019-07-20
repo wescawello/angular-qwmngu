@@ -66,7 +66,7 @@
                  [(bsValue)]="refobj.DiscardDate"
                  value="{{ refobj.DiscardDate | date:'yyyy-MM-dd' }}"
                  [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD' }">
-          <span class="help-bpx" *ngIf="DiscardDate.touched && !DiscardDate.valid ">*</span>
+          <span class="help-bpx" *ngIf="!DiscardDate.bsValue ">*</span>
         </div>
       </div>
       <div class="col-md-6">
@@ -93,14 +93,14 @@
 
       <div class="card">
         <div class="card-header">
-          <button class="btn btn-pill btn-primary" type="button" (click)="openModal('Add',{} );listactionName='Add';" [disabled]="!refobj.DiscardSn">
+          <button class="btn btn-pill btn-primary" type="button" (click)="openModal('Add',{} ,-1);listactionName='Add';" [disabled]="!refobj.DiscardSn">
             <i class="cui-cart icons font-2xl btn-danger mt-4"></i>
             新增細項
 
           </button>
         </div>
         <div class="card-body">
-          <div *ngIf="!refobj.DiscardList?.length>0">
+          <div *ngIf="refobj.DiscardList?.length==0">
             <h4> 請點選「新增細項」，建立資產明細</h4>
           </div>
           <table class="table" *ngIf="refobj.DiscardList?.length>0">

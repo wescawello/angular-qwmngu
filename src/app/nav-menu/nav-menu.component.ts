@@ -21,7 +21,7 @@ export class NavMenuComponent  implements  AfterViewInit{
   subscribeScoll: Subscription;
     addsticky: boolean;
  
-  constructor(public modalService: BsModalService, public afAuth: AngularFireAuth, private afs: AngularFirestore, private authService: AuthService, private router: Router) {
+  constructor(public modalService: BsModalService, public afAuth: AngularFireAuth, private afs: AngularFirestore, public authService: AuthService, private router: Router) {
 
   }
 

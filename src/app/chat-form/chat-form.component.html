@@ -10,7 +10,7 @@
   <ng-template #elseTmpl>
 
 
-    <input class="chatInput"
+    <input class="chatInput" 
            [(ngModel)]="newRoom" (keydown.enter)="newRoomFn(newRoom)" />
     <button class="chatButton" (click)="newRoomFn(newRoom)">New room</button>
   </ng-template>

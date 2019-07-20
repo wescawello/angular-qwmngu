@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { async } from 'q';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
@@ -106,9 +105,9 @@ export class MyProfileComponent implements OnInit {
     alert(`Done ! ${s}`)
   }
 
-  tarx(s: string, p: HTMLInputElement) {
+  tarx(s: string, p: HTMLInputElement ) {
 
-    p.type = s == 'd' ? 'text' : 'password'
+      p.type = s == 'd' ? 'text' : 'password'
 
 
   }

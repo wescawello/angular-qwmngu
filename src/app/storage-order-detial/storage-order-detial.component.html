@@ -54,7 +54,7 @@
 
 
                 
-          <span class="help-bpx" *ngIf="BuyDate.touched && !BuyDate.valid ">*</span>
+          <span class="help-bpx" *ngIf="!BuyDate.bsValue ">*</span>
         </div>
       </div>
     </div>
@@ -99,14 +99,14 @@
 
     <div class="card">
       <div class="card-header">
-        <button class="btn btn-pill btn-primary" type="button" (click)="openModal('Add',{} );listactionName='Add';" [disabled]="!refobj.StorageSn">
+        <button class="btn btn-pill btn-primary" type="button" (click)="openModal('Add',{} ,-1);listactionName='Add';" [disabled]="!refobj.StorageSn">
           <i class="cui-cart icons font-2xl btn-danger mt-4"></i>
           新增明細 {{ refobj.StorageSn ? '':' (請先輸入請購單號)'}}
 
         </button>
       </div>
       <div class="card-body">
-        <div *ngIf="!refobj.StorageList?.length>0">
+        <div *ngIf="refobj.StorageList?.length==0">
           <h4>請點選「新增明細」，建立資產明細  .</h4>
 
 

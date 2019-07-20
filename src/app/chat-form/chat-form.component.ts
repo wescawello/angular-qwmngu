@@ -12,7 +12,7 @@ export class ChatFormComponent implements OnInit {
   chat$: Observable<any>;
   newMsg: string;
   chatId$ = new BehaviorSubject<string>("");
-
+    newRoom: string;
   constructor(private cs: ChatService, private route: ActivatedRoute) { }
 
   ngOnInit() {

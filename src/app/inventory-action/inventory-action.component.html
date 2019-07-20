@@ -34,7 +34,7 @@
             <div class="label">LIMITED</div>
           </div>
           <span>Your Code is</span>
-          <strong>{{ lastResult || async }}'</strong>
+         
           <em *ngIf="!message">Searching...</em>
           <em *ngIf="message">{{message}}</em>
         </a>
@@ -54,7 +54,7 @@
 
     <div class="show__sm" *ngIf="lastResult">
       <p>Your Code is</p>
-      <p>{{ lastResult || async }}'</p>
+
       <p *ngIf="!message">Searching...</p>
       <p *ngIf="message">{{message}}</p>
     </div>

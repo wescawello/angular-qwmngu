@@ -71,7 +71,7 @@
               <div class="card" style="min-height:60px;width:100%; ">
                 <div class="card-body">
                   <h5 class="card-title">{{f.name}}</h5>
-                  <input type="range" [max]="f.range.Max" [(ngModel)]='f.range.fixTo' name="ranges[{{k}}]" (ngModelChange)="fixrange(f)" style="width:100%" />
+                  <input type="range" [max]="f.range.Max.toString()" [(ngModel)]='f.range.fixTo' name="ranges[{{k}}]" (ngModelChange)="fixrange(f)" style="width:100%" />
 
                   <p class="card-text">
                     <label style=" ">{{f.range.To}}<span *ngIf="f.randerobj?.Amt">=>{{f.range.fixTo}}         </span></label>

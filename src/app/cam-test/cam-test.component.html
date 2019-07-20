@@ -46,7 +46,7 @@
     <accordion [isAnimated]="true">
       <accordion-group *ngFor="let docker of (localItems$ |async ),let i = index"
                        
-                       [panelClass]="{'redbox':docker.InventoryDate,'yellowbox':docker.UserId}">
+                       [panelClass]="docker.InventoryDate!=null ? 'redbox' :  docker.UserId!=null ? 'yellowbox' :''">
 
         <span accordion-heading>
           <i class='fa fa-users'></i> {{docker.AssetSn}}

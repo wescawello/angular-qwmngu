@@ -132,7 +132,7 @@ export class DiscardOrderDetialComponent implements OnInit {
 
   }
 
-  openModal(s: string, el: DiscardList, i: number
+  openModal(s: string, el: DiscardList | any, i: number
    // , pel: DiscardOrder
   ) {
     this.editIndex = i;
