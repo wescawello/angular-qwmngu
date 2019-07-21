@@ -2,6 +2,9 @@
   <span class="status" [ngClass]=(user.Status)>
   </span>
   <span class="userName">
-    {{user.displayName}}   
+      {{user.displayName}}
+      <fa-icon *ngIf="!uids.includes(user.uid)"
+               (click)="inv(user.uid)"
+               [icon]="['fas', 'hand-peace']" size="xs"></fa-icon>
   </span>
 </div>

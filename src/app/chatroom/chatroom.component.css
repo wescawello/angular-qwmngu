@@ -1,35 +1,36 @@
-.mainContent{
-    display: flex;
+.mainContent {
+  display: flex;
+  max-height: 516px;
 }
 
 .userListWrapper {
-    background-color: #2A2845;
-    color: #fff;
-    display: flex;
-    font-family: "Open Sans", sans-serif;
-    font-size: 1.2em;
-    flex: 1;
-    /*order: 1;*/
-    padding:20px 0px 40px 30px;
-    border-right: 1px solid #222;
+  background-color: #2A2845;
+  color: #fff;
+  display: flex;
+  font-family: "Open Sans", sans-serif;
+  font-size: 10pt;
+  flex: 1;
+  /*order: 1;*/
+  flex-direction: column;
+  padding: 8px 0 0 5px;
+  border-right: 1px solid #222;
+  max-height: 516px;
+  overflow-y: auto;
 }
 
 .feedWrapper {
     background-color: #fff;
-    background: 
-        linear-gradient(181deg, rgba(100,200,255,0.6), rgba(0, 0, 0, 0.9)),
-          center center no-repeat;
+    background: linear-gradient(181deg, rgba(100,200,255,0.6), rgba(0, 0, 0, 0.9)), center center no-repeat;
     font-family: "Open Sans", sans-serif;
     font-size: 1.2em;
     flex: 5;
     order: 2;
     overflow-y: scroll;
-    padding:20px 0px 0px 24px;
+    padding: 20px 0 0 24px;
 }
 
 .chatFormWrapper {
-    display: flex;
-    height: 50px;
+    display: grid;
     background-color: #eee;
     z-index: 3;
 }
@@ -80,7 +81,7 @@ img {
   display: inline-block;
   text-align: right;
   width: 60%;
-  padding:
+ 
 }
 
 .headind_srch {
@@ -191,14 +192,16 @@ img {
   font-size: 12px;
   margin: 8px 0 0;
 }
-
+ul {
+  list-style: none;
+}
 .received_withd_msg {
   width: 57%;
 }
 
 .mesgs {
   float: left;
-  padding: 0px 15px 0 25px;
+  padding: 0 15px 0 25px;
   width: 60%;
 }
 
@@ -209,6 +212,7 @@ img {
   margin: 0;
   color: #fff;
   padding: 5px 10px 5px 12px;
+  white-space:pre;
   width: 100%;
 }
 

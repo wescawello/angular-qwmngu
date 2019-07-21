@@ -1,118 +1,59 @@
-<div class="mainContent">
+<div class="mainContent" >
   <div class="userListWrapper">
-    <app-user-list></app-user-list>
-  </div>
-  <div class="mesgs  " #scroller *ngIf="chat$ | async as chat">
-    <div class="msg_history">
-      <div class="incoming_msg">
-        <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-        <div class="received_msg">
-          <div class="received_withd_msg">
-            <p>
-              Test which is a new approach to have all
-              solutions
-            </p>
-            <span class="time_date"> 11:01 AM    |    June 9</span>
-          </div>
-        </div>
-      </div>
-      <div class="outgoing_msg">
-        <div class="sent_msg">
-          <p>
-            Test which is a new approach to have all
-            solutions
-          </p>
-          <span class="time_date"> 11:01 AM    |    June 9</span>
-        </div>
-      </div>
-      <div class="incoming_msg">
-        <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-        <div class="received_msg">
-          <div class="received_withd_msg">
-            <p>Test, which is a new approach to have</p>
-            <span class="time_date"> 11:01 AM    |    Yesterday</span>
-          </div>
-        </div>
-      </div>
-      <div class="outgoing_msg">
-        <div class="sent_msg">
-          <p>Apollo University, Delhi, India Test</p>
-          <span class="time_date"> 11:01 AM    |    Today</span>
-        </div>
-      </div>
-      <div class="incoming_msg">
-        <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-        <div class="received_msg">
-          <div class="received_withd_msg">
-            <p>
-              We work directly with our designers and suppliers,
-              and sell direct to you, which means quality, exclusive
-              products, at a price anyone can afford.
-            </p>
-            <span class="time_date"> 11:01 AM    |    Today</span>
-          </div>
-        </div>
-      </div>
-      <div class="incoming_msg">
-        <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-        <div class="received_msg">
-          <div class="received_withd_msg">
-            <p>
-              We work directly with our designers and suppliers,
-              and sell direct to you, which means quality, exclusive
-              products, at a price anyone can afford.
-            </p>
-            <span class="time_date"> 11:01 AM    |    Today</span>
-          </div>
-        </div>
-      </div>
-      <div class="incoming_msg">
-        <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-        <div class="received_msg">
-          <div class="received_withd_msg">
-            <p>
-              We work directly with our designers and suppliers,
-              and sell direct to you, which means quality, exclusive
-              products, at a price anyone can afford.
-            </p>
-            <span class="time_date"> 11:01 AM    |    Today</span>
-          </div>
-        </div>
-      </div>
+    <app-user-list   *ngIf="chat$|async as chat"  [uids]="chat.uids"></app-user-list>
+  
+    <div>
+      <ul>
+        <ng-template ngFor let-c [ngForOf]="userchats$|async" let-i="index">
+          <li *ngIf="c.id!=chatId" >
+            <a style="color:bisque" class="nav-link" [routerLink]='["/chats",c.id]'>{{c.title}}</a>
+          </li>
+        </ng-template>
+      </ul>
+
     </div>
 
+  </div>
+  <div class="mesgs  msg_history" #scroller *ngIf="chat$|async as chat">
+
+    <ng-template ngFor let-msg [ngForOf]="chat.messages" let-i="index" [ngForTrackBy]="trackByCreated">
+      <ng-template [ngIf]="auth.currentUserId!=msg.uid" [ngIfElse]="incoming">
+        <div class="incoming_msg">
+          <div class="incoming_msg_img">
+
+            <img [src]="msg.user.photoURL" [alt]="msg.user.displayName" *ngIf="msg.user.photoURL else pimg">
+            <ng-template #pimg>
+              <i class="fas fa-address-card fa-2x"></i>
+            </ng-template>
+          </div>
+          <div class="received_msg">
+            <div class="received_withd_msg">
+              <p>{{msg.content}}</p>
+              <span class="time_date"> {{msg.createdAt|date:'hh:mm:ss | yyyy/MM/dd'}}  </span>
+            </div>
+          </div>
+
+        </div>
+      </ng-template>
+      <ng-template #incoming>
+        <div class="outgoing_msg">
+          <div class="sent_msg">
+            <p>{{msg.content}}</p>
+            <span class="time_date"> {{msg.createdAt|date:'hh:mm:ss | yyyy/MM/dd'}}  </span>
+          </div>
+        </div>
+      </ng-template>
+    </ng-template>
+    <!--<pre> {{chat|json}}</pre>-->
 
 
 
 
 
-
-    <!--<div class="msg" *ngFor="let msg of chat.messages; trackBy: trackByCreated">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class="user">
-      <img [src]="msg.user?.photoURL">
-      <div><span>{{ msg.user?.displayName }}</span></div>
-    </div>
-
-    <p>{{ msg.content }}</p>
-
-  </div>-->
   </div>
 
- </div>
+</div>
+
 <div class="chatFormWrapper">
   <app-chat-form></app-chat-form>
 </div>

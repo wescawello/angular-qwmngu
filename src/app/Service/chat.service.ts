@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
- 
+
 import { Observable, of, combineLatest } from 'rxjs';
 import { AuthService } from '../Service/auth.service';
 import * as firebase from 'firebase/app';
 
- 
+
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { map, switchMap } from 'rxjs/operators'; 
+import { map, switchMap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
@@ -32,22 +32,51 @@ export class ChatService {
 
       return oo;
     } else {
-      return of({ id: "", messages:[]})
+      return of({ id: "", messages: [] })
     }
-  
+
 
   }
+  userchats(uid) {
+    console.log(uid);
+    let oo = this.afs
+      .collection<any>('chats', ref => ref.where('uids', 'array-contains', uid))
+      .snapshotChanges()
+      .pipe(
+        map(userchats => {
+
+          console.log(userchats);
+          return userchats.map(c => {
+            console.log({ id: c.payload.doc.id, title: c.payload.doc.data().title });
+
+           return ({ id: c.payload.doc.id, title: c.payload.doc.data().title })
+             
+          }
+          )
+
+
+          //return    {  id: doc.payload.id, ...doc.payload.data() };
+        })
+      );
+
+    return oo;
+
+
+  }
+
+
+
   getUsers() {
     return this.afs.collection('users').valueChanges();
   }
 
-  async create(s:string) {
-    const  uid  =  this.authService.currentUserId;
+  async create(s: string) {
+    const uid = this.authService.currentUserId;
 
     const data = {
       uid,
       createdAt: Date.now(),
-      title:s,
+      title: s,
       count: 0,
       messages: [],
       uids: [uid]
@@ -58,10 +87,18 @@ export class ChatService {
     return this.router.navigate(['chats', docRef.id]);
   }
 
+  invuser(chatId, uid) {
 
 
+    const ref = this.afs.collection('chats').doc(chatId);
+    return ref.update({
+      uids: firebase.firestore.FieldValue.arrayUnion(uid)
+    });
 
-  async sendMessage(chatId, content) {
+  }
+
+
+  sendMessage(chatId, content) {
     const uid = this.authService.currentUserId;
     const data = {
       uid,
@@ -69,7 +106,7 @@ export class ChatService {
       createdAt: Date.now()
     };
 
-    if (uid) {
+    if (uid && content) {
       const ref = this.afs.collection('chats').doc(chatId);
       return ref.update({
         messages: firebase.firestore.FieldValue.arrayUnion(data)
