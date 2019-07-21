@@ -37,7 +37,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'; 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faTrashAlt, faSquare, faCheckSquare, faCamera, faEye, faEnvelopeOpenText } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faSquare, faCheckSquare, faCamera, faEye, faEnvelopeOpenText,faUserEdit } from '@fortawesome/free-solid-svg-icons';
 import { faStackOverflow, faGithub, faMedium } from '@fortawesome/free-brands-svg-icons';
  
 
@@ -57,7 +57,6 @@ ProgressbarModule
 import { CamBarcodeComponent } from './cam-barcode/cam-barcode.component';
 import { MyProfileComponent } from './my-profile/my-profile.component';
 import { CamTestComponent } from './cam-test/cam-test.component';
-import { NgxInactivity } from './ngx-inactivity';
 import { MessagesComponent } from './messages/messages.component';
 import { ChatroomComponent } from './chatroom/chatroom.component';
 import { UserListComponent } from './user-list/user-list.component';
@@ -104,7 +103,6 @@ import { MessageContainerComponent } from './message-container/message-container
     FormsModule,
     HttpClientModule,
     NgxScreenfullModule,
-    NgxInactivity,
 
     BsDatepickerModule.forRoot(),
     AccordionModule.forRoot(),
@@ -122,7 +120,7 @@ import { MessageContainerComponent } from './message-container/message-container
 export class AppModule {
   constructor() {
     // Add an icon to the library for convenient access in other components
-    library.add( faCamera,faTrashAlt, faEye,faEnvelopeOpenText);
+    library.add( faCamera,faTrashAlt, faEye,faEnvelopeOpenText,faUserEdit);
  
   
   }

@@ -1,5 +1,5 @@
 import { Injectable, Type } from '@angular/core';
-//import * as Quagga  from 'quagga';
+import * as Quagga  from 'quagga';
 import { QuaggaJSStatic, QuaggaJSConfigObject } from '../Model/qua'
 import { quagga } from 'quagga';
 import { DECODER_CONFIG, DECODER_LIVE_CONFIG } from '../lib/conf';
@@ -7,7 +7,7 @@ import { BehaviorSubject, of, bindCallback, bindNodeCallback } from 'rxjs';
 import { take, filter } from 'rxjs/operators';
 import { asyncScheduler } from "rxjs";
 //declare var Quagga: QuaggaJSStatic = Quagga;
-const Quagga: QuaggaJSStatic= require('quagga');
+//import Quagga = (require('quagga'));
  
 @Injectable({
   providedIn: 'root'

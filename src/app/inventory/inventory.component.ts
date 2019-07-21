@@ -302,7 +302,7 @@ export class InventoryComponent implements OnInit {
   }
   addStatus(tb: ITabdemo, p: { Name: string }) {
     tb.Status = [...tb.Status, p];
-    tb.Status = [...new Set(tb.Status.map(p => p.Name))].map(p => { return { Name: p } });
+      tb.Status = [...Array.from(new Set(tb.Status.map(p => p.Name)))].map(p => { return { Name: p } });
 
   }
   spStatus(tb: ITabdemo, i) {

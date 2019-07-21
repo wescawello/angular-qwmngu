@@ -4,9 +4,10 @@
     "outDir": "../out-tsc/app",
     "module": "esnext",
     "types": []
+
   },
   "angularCompilerOptions": {
-    "enableIvy": false,
+    "enableIvy": true,
     "allowEmptyCodegenFiles": false
   },
   "exclude": [

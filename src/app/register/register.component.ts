@@ -41,7 +41,7 @@ export class RegisterComponent implements OnInit {
       console.log(this.afAuth.auth);
 
 
-    }).catch(err => alert(err));
+    }).catch(console.error);
     //try {
     //  let p = await pu;
     //  console.log(p);
@@ -51,8 +51,8 @@ export class RegisterComponent implements OnInit {
     //}
     
   }
-  logout() {
-    this.afAuth.auth.signOut();
+  async logout() {
+    await this.afAuth.auth.signOut();
   }
   tryRegister(value: { email: string, password: string }) {
     let { email, password } = value;
