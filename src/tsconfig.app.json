@@ -7,8 +7,8 @@
 
   },
   "angularCompilerOptions": {
-    "enableIvy": false,
-    "allowEmptyCodegenFiles": false
+    "enableIvy": true,
+    "allowEmptyCodegenFiles": true
   },
   "exclude": [
     "test.ts",
