@@ -8,6 +8,7 @@ import * as firebase from 'firebase/app';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { map, switchMap } from 'rxjs/operators';
+import { User } from '../models/user.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -32,7 +33,7 @@ export class ChatService {
 
       return oo;
     } else {
-      return of({ id: "", messages: [] })
+      return of({ id: "", messages: [],uids:[] })
     }
 
 
@@ -67,7 +68,7 @@ export class ChatService {
 
 
   getUsers() {
-    return this.afs.collection('users').valueChanges();
+    return this.afs.collection<User>('users').valueChanges();
   }
 
   async create(s: string) {
@@ -126,13 +127,13 @@ export class ChatService {
 
         // Firestore User Doc Reads
         const userDocs = uids.map(u =>
-          this.afs.doc(`users/${u}`).valueChanges()
+          this.afs.doc<User>(`users/${u}`).valueChanges()
         );
-
-        return userDocs.length ? combineLatest(userDocs) : of([]);
+        return userDocs.length ? combineLatest(userDocs) : of(<User[]>[]);
       }),
       map(arr => {
-        arr.forEach(v => (joinKeys[(<any>v).uid] = v));
+        console.log(arr);
+        arr.forEach(v => (joinKeys[v.uid] = v));
         chat.messages = chat.messages.map(v => {
           return { ...v, user: joinKeys[v.uid] };
         });

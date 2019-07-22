@@ -3,7 +3,7 @@
   </span>
   <span class="userName">
       {{user.displayName}}
-      <fa-icon *ngIf="!uids.includes(user.uid)"
+      <fa-icon *ngIf="uids.length>0 && !uids.includes(user.uid)"
                (click)="inv(user.uid)"
                [icon]="['fas', 'hand-peace']" size="xs"></fa-icon>
   </span>

@@ -2,69 +2,60 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { BehaviorSubject, merge, Observable, Subject, fromEvent, observable, of, Subscription } from 'rxjs';
-import { tap, map, filter, take, takeUntil, bufferTime, switchMap, distinctUntilChanged } from 'rxjs/operators';
+import { tap, map, filter, take, takeUntil, bufferTime, switchMap, distinctUntilChanged, delay } from 'rxjs/operators';
 import { IMessage } from '../Model/commonModel';
 import { Router } from '@angular/router';
 import { isArray } from 'ngx-bootstrap';
+import { User } from '../models/user.model';
 
 type vf = firebase.User & { Status: string }
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  AllUser$ = new BehaviorSubject<vf[]>([]);
-  CurrUser$ = new BehaviorSubject<vf>(null);
+  AllUser$ = new BehaviorSubject<User[]>([]);
+  CurrUser$ = new BehaviorSubject<User>(null);
   Messages$ = new BehaviorSubject<(IMessage & { xid: string })[]>([]);
   UnReadMessagesCount$ = new BehaviorSubject<number>(0);
   sMsgs$: Observable<(IMessage & { xid: string })[]>;
-  refAllUser$: Observable<vf[]>;
+  refAllUser$: Observable<User[]>;
   useronline$ = new BehaviorSubject(true);
 
   private _ngUnsubscribe = new Subject();
   emitoff: boolean = true;
   idleaction: Observable<Event[]>;
-  rewait: Subscription;
-  rewaitx: Subscription;
+
 
 
   authState: firebase.auth.UserCredential;
   currentUserId: string;
   user$: Observable<any>;
+    randomId: string;
   constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore, private router: Router) {
-    this.afAuth.authState
-      .pipe(
-        tap(async auth => {
-          if (auth) {
-            this.currentUserId = auth.uid;
-
-            if (!auth.displayName) {
-              auth.updateProfile({ displayName: auth.email.split('@')[0] });
-            }
-            localStorage.setItem('ctoken', await auth.getIdToken());
-
-
-
-            // uid is defined
-          } else {
-            let ctoken = localStorage.getItem('ctoken')
-            console.log(ctoken);
-            if (ctoken) {
-              let c = await this.afAuth.auth.signInWithCustomToken(ctoken);
-              await this.updateUserData(c.user);
-            }
-          }
-        }))
+    this.randomId = Math.random().toString(36).substring(2);
+    this.afAuth.authState.pipe(tap(async auth => {
+      console.log("dasdsadasd",auth);
+      if (auth) {
+        this.currentUserId = auth.uid;
+        if (!auth.displayName) {
+          await auth.updateProfile({ displayName: auth.email.split('@')[0] });
+        }
+        await this.updateUserData(auth, this.randomId);
+        localStorage.setItem('ctoken', await auth.getIdToken());
+      } else {
+        this.currentUserId = "";
+        let ctoken = localStorage.getItem('ctoken')
+        if (ctoken) {
+          let c = await this.afAuth.auth.signInWithCustomToken(ctoken);
+          await this.updateUserData(c.user,this.randomId);
+          console.log('hgfhgfhhfgh',c.user);
+        }
+      }
+    }))
       .subscribe((auth) => {
         console.log(auth);
         if (auth) {
           this._ngUnsubscribe = new Subject();
-          if (this.rewait) {
-            this.rewait.unsubscribe();
-          }
-          if (this.rewaitx) {
-            this.rewaitx.unsubscribe();
-          }
-
           this.sMsgs$ = this.afs.collection<IMessage>(`messages/${auth.uid}/msgs`, ref => ref.orderBy("CreateDate", "asc")).valueChanges({ idField: 'xid' })
             .pipe(
               takeUntil(this._ngUnsubscribe),
@@ -91,13 +82,26 @@ export class AuthService {
               ))
             );
 
-          this.refAllUser$ = this.afs.collection<vf>(`users`).valueChanges()
-            .pipe(
+          this.refAllUser$ = this.afs.collection<User>(`users`).valueChanges()
+            .pipe(delay(3000),
               takeUntil(this._ngUnsubscribe));
-          this.refAllUser$.subscribe(o => {
+          this.refAllUser$.subscribe(async o => {
             this.AllUser$.next(o);
             if (afAuth.auth.currentUser) {
+              let g = this.CurrUser$.getValue();
+              //console.log(g);
               this.CurrUser$.next(o.find(p => p.uid == afAuth.auth.currentUser.uid));
+
+              if (g) {
+                let gid = g.randomId;
+                if (this.CurrUser$.getValue().randomId != this.randomId && gid != this.randomId) {
+                  console.log(this.CurrUser$.getValue().randomId, g, this.randomId);
+                  console.log("other blowser login");
+                  localStorage.removeItem('ctoken');
+                  await this.afAuth.auth.signOut();
+                }
+              }
+              
             }
           });
 
@@ -110,29 +114,7 @@ export class AuthService {
 
 
 
-          let exitaction = merge(...['keydown', 'click', 'mousemove', 'touchstart', 'scroll'].map(o => fromEvent(document, o)));
-
-          // this.idleaction = ;
-
-          // this.rewait = this.idleaction.subscribe(async x => await this.offFn(x));
-          // this.rewaitx =
-          this.useronline$.pipe(distinctUntilChanged(), switchMap(b => {
-            return b ?
-              exitaction.pipe(bufferTime(15 * 1000), filter(arr => arr.length === 0), takeUntil(this._ngUnsubscribe))
-              :
-              exitaction.pipe(take(1), takeUntil(this._ngUnsubscribe));
-
-
-
-
-          })).subscribe(async x => isArray(x) ? await this.offFn(x) : await this.onFn(x)
-
-
-
-          );
-
-
-
+          
         } else {
           this._ngUnsubscribe.next();
           this._ngUnsubscribe.complete();
@@ -147,18 +129,13 @@ export class AuthService {
       });
     this.Messages$.subscribe(o => {
       //console.log(o.filter(p => !p.Read).length);
-
-
-
-
       this.UnReadMessagesCount$.next(o.filter(p => !p.Read).length);
     });
     this.CurrUser$.pipe(tap(o => {
       if (o) {
-
         this.emitoff = o.Status == "online";
         if (this.emitoff != this.useronline$.getValue()) {
-          console.log(this.emitoff);
+          //console.log(this.emitoff);
           this.useronline$.next(this.emitoff);
 
         }
@@ -176,57 +153,72 @@ export class AuthService {
         }
       })
     );
+    this.useronline$.pipe(distinctUntilChanged(),
+      switchMap(b => {
+        let exitaction = merge(...['keydown', 'click', 'mousemove', 'touchstart', 'scroll'].map(o => fromEvent(document, o)));
+
+        if (b)
+          return exitaction.pipe(bufferTime(15 * 1000), filter(arr => arr.length === 0), takeUntil(this._ngUnsubscribe))
+        else 
+          return exitaction.pipe(take(1), takeUntil(this._ngUnsubscribe))
+
+      })).subscribe(async x => await this.onoffFn(x));
   }
 
-  async offFn(x) {
-    console.log(new Date(), 'idle', 'after', 15, 's', x);
-    await this.setUserStatus("offline");
+  async onoffFn(x) {
+    console.log('fdsfsdf', isArray(x) ? "offline" : "online");
+    isArray(x) ? console.log(new Date(), 'idle after', 15, 's', x) : console.log(new Date(), 'not idle');
+    return await this.setUserStatus(isArray(x) ? "offline" : "online")
   }
-  async  onFn(x) {
-    console.log(new Date(), 'not idle');
-    //this.idleaction = this.idleaction.pipe(bufferTime(15 * 1000));
-    await this.setUserStatus("online");
-    //this.rewait.unsubscribe();
 
-    //this.rewait = this.idleaction.subscribe(async x => await this.offFn(x));
-  }
+  //offFn(x) {
+  //  console.log(new Date(), 'idle', 'after', 15, 's', x);
+  //  //return Promise.resolve();
+  //  return this.setUserStatus("offline");
+  //}
+  //onFn(x) {
+  //  console.log(new Date(), 'not idle');
+  //  return this.setUserStatus("online");
+  //}
 
 
   login(email: string, password: string) {
     return this.afAuth.auth.signInWithEmailAndPassword(email, password)
       .then(async (credential) => {
         this.authState = credential;
-        await this.updateUserData(credential.user);
+
         //this.setUserStatus('online');
         //this.router.navigate(['chat']);
         return credential;
       });
   }
-  private updateUserData({ uid, email, displayName, photoURL }) {
+  private updateUserData({ uid, email, displayName, photoURL }, randomId) {
     const userRef = this.afs.doc(`users/${uid}`);
-
-    const data = {
+    const data: User = {
+      randomId,
       uid,
       email,
       displayName,
       photoURL,
+      Status:'online',
       onlineDate: new Date()
     };
-
     return userRef.set(data, { merge: true });
   }
   logout() {
     this.afAuth.auth.signOut();
     //this.router.navigate(['login']);
   }
-  async setUserStatus(status: string) {
-    const path = `users/${this.currentUserId}`;
-
-    const data = {
-      Status: status
-    };
-
-    await this.afs.doc(path).update(data);
-
+  setUserStatus(status: string) {
+    if (this.currentUserId) {
+      const path = `users/${this.currentUserId}`;
+      const data = {
+        Status: status
+      };
+      return this.afs.doc(path).update(data);
+    } else {
+      return Promise.resolve();
+    }
+    
   }
 }

@@ -7,6 +7,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { fromEvent, interval, Subscription } from 'rxjs';
 import { AuthService } from '../Service/auth.service';
 import {   Router } from '@angular/router';
+import { User } from '../models/user.model';
 
 @Component({
   selector: 'app-nav-menu',
@@ -44,19 +45,22 @@ export class NavMenuComponent  implements  AfterViewInit{
       this.isExpanded = !this.isExpanded;
     }
   }
-  logout() {
+  async logout() {
     localStorage.removeItem('ctoken');
     console.log("cl localStorage");
     this.router.navigate(['/'], { replaceUrl: true });
-    this.afs.doc(`users/${this.afAuth.auth.currentUser.uid}`).update({
-      offlineDate: new Date(), State:'offline'
-    }).then(() => {
+    let p = await this.authService.onoffFn([]);
+    let q = this.afAuth.auth.signOut();
 
-      this.afAuth.auth.signOut().then(() => {
+    //this.afs.doc<User>(`users/${this.afAuth.auth.currentUser.uid}`).update({
+    //  offlineDate: new Date(), Status:'offline'
+    //}).then(() => {
+
+    //  this.afAuth.auth.signOut().then(() => {
 
        
-      });
-    });
+    //  });
+    //});
 
   }
   login() {

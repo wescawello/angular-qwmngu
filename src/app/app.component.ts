@@ -29,8 +29,8 @@ export class AppComponent implements   AfterViewChecked{
       if (ly.showNav.getValue()) {
         let currtop = document.body.getBoundingClientRect().top;
         this.connn = false;
-
-        this.isSticky = !(currtop > scrollPos || currtop == 0);
+        console.log(currtop);
+        this.isSticky = !(currtop > scrollPos || currtop >-200);
         scrollPos = currtop;
 
         timer(100).subscribe(p => {

@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 import { NgxScreenfullModule } from '@ngx-extensions/screenfull';
+import { MomentModule } from 'ngx-moment';
 
 
 
@@ -112,7 +113,13 @@ import { MessageContainerComponent } from './message-container/message-container
     ProgressbarModule.forRoot(),
     SortableModule.forRoot(),
     BsDropdownModule.forRoot(),
-    TabsModule.forRoot()
+    TabsModule.forRoot(),
+
+    MomentModule.forRoot({
+      relativeTimeThresholdOptions: {
+        'm': 59
+      }
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

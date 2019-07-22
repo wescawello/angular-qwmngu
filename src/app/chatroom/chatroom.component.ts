@@ -13,7 +13,7 @@ export class ChatroomComponent implements OnInit, AfterViewChecked {
     @ViewChild('scroller', { static: false }) private feedContainer: ElementRef;
     chat$: Observable<any>;
     newMsg: string;
-    userchats$: Observable<{ id: string; title: any; }[]>;
+    userchats$: Observable<{ id: string; title: string; }[]>;
     chatId: string;
 
 
@@ -26,21 +26,14 @@ export class ChatroomComponent implements OnInit, AfterViewChecked {
 
   ngOnInit() {
     this.route.paramMap.subscribe(p => {
-      const chatId = p.get('id');
-      this.chatId = chatId;
-      const source = this.cs.get(chatId);
+      this.chatId = p.get('id');
+      const source = this.cs.get(this.chatId);
       this.chat$ = this.cs.joinUsers(source);
-
     });
-
-
-
     this.auth.CurrUser$.subscribe(p => {
       if (p && !this.userchats$) {
         this.userchats$ = this.cs.userchats(this.auth.currentUserId);
       }
-
-
     })
 
         ;

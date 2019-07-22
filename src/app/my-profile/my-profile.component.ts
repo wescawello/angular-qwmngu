@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { BehaviorSubject } from 'rxjs';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 @Component({
   selector: 'app-my-profile',
@@ -11,8 +12,9 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class MyProfileComponent implements OnInit {
     photoURL$= new BehaviorSubject<string>(null);
+  ufile$ = new BehaviorSubject<File>(null);
 
-  constructor(private afAuth: AngularFireAuth,) { }
+  constructor(private afAuth: AngularFireAuth,private afstore :AngularFireStorage) { }
   x: any = {};
   ngOnInit() {
   }
@@ -77,6 +79,8 @@ export class MyProfileComponent implements OnInit {
         //e.target.result
         this.resizedataURL(e.target.result, 30, 30).then(xx => {
           this.photoURL$.next(xx);
+          this.ufile$.next(f)
+
         });
 
 
@@ -95,8 +99,20 @@ export class MyProfileComponent implements OnInit {
 
   async chphotox() {
     console.log(this.photoURL$.getValue());
-   await this.afAuth.auth.currentUser.updateProfile({ photoURL: this.photoURL$.getValue() });
-    alert(`Done ! new pic`);
+    try {
+      await this.afAuth.auth.currentUser.updateProfile({ photoURL: this.photoURL$.getValue() });
+      alert(`Done ! new pic`);
+    } catch (e) {
+      let ref = this.afstore.ref(`user/${this.afAuth.auth.currentUser.uid}`)
+      let h = ref.put(this.ufile$.getValue());
+      let u= await ref.getDownloadURL().toPromise();
+      await this.afAuth.auth.currentUser.updateProfile({ photoURL: u});
+
+     
+      alert(u);
+
+    }
+
   }
 
 

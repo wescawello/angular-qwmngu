@@ -1,8 +1,11 @@
 export class User {
-    uid?: string;
-    email?: string;
-    username?: string;
-    password?: string;
-    Status?: string;
-    displayName?: string;
+  uid?: string;
+ 
+  email: string;
+  randomId: string;
+  photoURL?: string;
+  onlineDate?: Date;
+  offlineDate?: Date;
+  Status?: string;
+  displayName?: string;
 }
